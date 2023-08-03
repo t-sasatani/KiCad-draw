@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "kicad-coil-maker"
+version = "0.1.0"
+description = ""
+authors = ["t-sasatani <sasatani.dev@gmail.com>"]
+readme = "README.md"
+packages = [{include = "kicad_antenna_maker"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.25.2"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.25.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
