@@ -1,2 +1,10 @@
+### Install
+```
+pip install kicad-coil-maker
+```
+
 ### Development state
-- Only coils at the moment.
+- Helix coil: working
+- Double-layer spiral coil: working
+- Single-layer spiral coil: to do
+- Loop coil: to do
