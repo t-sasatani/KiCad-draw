@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["t-sasatani <sasatani.dev@gmail.com>"]
 readme = "README.md"
-packages = [{include = "kicad_antenna_maker"}]
+packages = [{include = "kicad_coil_maker"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
