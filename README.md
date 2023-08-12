@@ -16,6 +16,6 @@ Currently, manual edits to the .kicad_pcb file are required (Issue https://githu
 
 ### Development state
 - Helix coil: working
-- Double-layer spiral coil: working
+- Double-layer spiral coil: almost working
 - Single-layer spiral coil: to do
 - Loop coil: to do
