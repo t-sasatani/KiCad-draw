@@ -28,8 +28,10 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
     ]
+autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
+# Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

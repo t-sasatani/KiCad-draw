@@ -6,11 +6,12 @@
 Welcome to KiCad-draw's documentation!
 ======================================
 
+Contents
+--------
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
-   kicad_draw
+   usage
+   api
 
 Features
 --------
