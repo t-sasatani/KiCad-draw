@@ -9,6 +9,7 @@ packages = [{include = "kicad_draw"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 numpy = "^1.25.2"
+pytest = "^7.4.3"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.25.0"
@@ -16,6 +17,7 @@ ipykernel = "^6.25.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
 
 [tool.poetry.group.docs]
 optional = true
