@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; KiCad-draw  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            KiCad-draw
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#PCBmodule.PCBdraw"><code class="docutils literal notranslate"><span class="pre">PCBdraw</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.open_pcbfile"><code class="docutils literal notranslate"><span class="pre">PCBdraw.open_pcbfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.writehelix"><code class="docutils literal notranslate"><span class="pre">PCBdraw.writehelix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.writeline"><code class="docutils literal notranslate"><span class="pre">PCBdraw.writeline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.writepolylinearc"><code class="docutils literal notranslate"><span class="pre">PCBdraw.writepolylinearc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.writevia"><code class="docutils literal notranslate"><span class="pre">PCBdraw.writevia()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">KiCad-draw</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-PCBmodule">
+<span id="api"></span><h1>API<a class="headerlink" href="#module-PCBmodule" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PCBmodule.</span></span><span class="sig-name descname"><span class="pre">PCBdraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Nlayer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nelement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viasize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drillsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python module for generating traces for KiCad PCB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Nlayer</strong> (<em>int</em>) – </p></li>
+<li><p><strong>net_number</strong> – </p></li>
+<li><p><strong>track_width</strong> – </p></li>
+<li><p><strong>connect_width</strong> – </p></li>
+<li><p><strong>Nelement</strong> – </p></li>
+<li><p><strong>viasize</strong> – </p></li>
+<li><p><strong>drillsize</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.open_pcbfile">
+<span class="sig-name descname"><span class="pre">open_pcbfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.open_pcbfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>open pcb file <strong>(not used yet)</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to .kicad_pcb file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>FileNotFoundError</strong> – if file is not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.writehelix">
+<span class="sig-name descname"><span class="pre">writehelix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerindexlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabposition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'OUT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_angle_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.writehelix" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw helix coil pattern</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>float</em>) – x-coordinate of helix coil center</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – y-coordinate of helix coil center</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – radius of helix coil</p></li>
+<li><p><strong>portgap</strong> (<em>float</em>) – length of port opening</p></li>
+<li><p><strong>tabgap</strong> (<em>float</em>) – TBD</p></li>
+<li><p><strong>angle_step</strong> – TBD</p></li>
+<li><p><strong>layerindexlist</strong> (<em>list</em>) – list/order of layers to write helix coil</p></li>
+<li><p><strong>tabposition</strong> (<em>string</em>) – defines position of tab for placing vias</p></li>
+<li><p><strong>base_angle_offset</strong> (<em>float</em>) – defines starting angle offset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.writeline">
+<span class="sig-name descname"><span class="pre">writeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayerString</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.writeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw linear conductive trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>float</em>) – x-coordinate of start point</p></li>
+<li><p><strong>y1</strong> (<em>float</em>) – y-coordinate of start point</p></li>
+<li><p><strong>x2</strong> (<em>float</em>) – x-coordinate of end point</p></li>
+<li><p><strong>y2</strong> (<em>float</em>) – y-coordinate of end point</p></li>
+<li><p><strong>line_width</strong> (<em>float</em>) – width of trace</p></li>
+<li><p><strong>LayerString</strong> (<em>string</em>) – name of layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.writepolylinearc">
+<span class="sig-name descname"><span class="pre">writepolylinearc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portangle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayerString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angleOffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.writepolylinearc" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw arc-shaped conductive trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>float</em>) – x-coordinate of arc center</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – y-coordinate of arc center</p></li>
+<li><p><strong>r1</strong> (<em>float</em>) – radius of arc</p></li>
+<li><p><strong>portangle</strong> (<em>float</em>) – angle of arc opening</p></li>
+<li><p><strong>LayerString</strong> (<em>string</em>) – name of layer</p></li>
+<li><p><strong>line_width</strong> (<em>float</em>) – width of trace</p></li>
+<li><p><strong>angleOffset</strong> (<em>float</em>) – offset of start angle of arc</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.writevia">
+<span class="sig-name descname"><span class="pre">writevia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Layerstring1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Layerstring2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.writevia" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw via</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – x-coordinate of via</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – y-coordinate of via</p></li>
+<li><p><strong>LayerString1</strong> (<em>string</em>) – name of via start layer</p></li>
+<li><p><strong>LayerString2</strong> (<em>string</em>) – name of via end layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Takuya Sasatani.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
