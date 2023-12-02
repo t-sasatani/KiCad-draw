@@ -45,6 +45,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
@@ -82,6 +83,15 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>kicad-draw
 </pre></div>
 </div>
+</section>
+<section id="how-to-use">
+<h2>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this heading">¶</a></h2>
+<p>Currently, manual edits to the .kicad_pcb file are required (Issue <a class="reference external" href="https://github.com/t-sasatani/KiCad-coil-maker/issues/1#issue-1837077917">https://github.com/t-sasatani/KiCad-coil-maker/issues/1#issue-1837077917</a>)</p>
+<ul class="simple">
+<li><p>Generate design text using the code (see notebook for example).</p></li>
+<li><p>Open the <cite>.kicad_pcb</cite> file using a text editor</p></li>
+<li><p>Paste the generated design text before the last closing bracket <cite>)</cite>.</p></li>
+</ul>
 </section>
 </section>
 
