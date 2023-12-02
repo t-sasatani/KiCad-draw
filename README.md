@@ -3,7 +3,7 @@ https://kicad-draw.readthedocs.io/en/latest/
 
 ### Install
 ```
-pip install kicad-coil-maker
+pip install kicad-draw
 ```
 
 ### How to use
