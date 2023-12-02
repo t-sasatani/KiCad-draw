@@ -107,7 +107,10 @@ class PCBdraw:
         
         Returns:
             None
-        
+
+        Raises:
+            AssertationError: when layer index exceeds len(layer_list)
+
         Example:
             >>> PCBdraw_ins = PCBdraw(stackup='default_4layer')
             >>> PCBdraw_ins.draw_via(x = 111.76, y = 107.315, via_size=0.8, drill_size=0.4, layer_index_1 = 0, layer_index_2 = 3, net_number=2)
@@ -115,9 +118,6 @@ class PCBdraw:
 
         Note:
             Example KiCad via: (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers "F.Cu" "B.Cu") (net 2) (tstamp 80a9442a-0307-48dc-b6c5-b41ea99e0e84))
-
-        Raises:
-            AssertationError: when layer index exceeds len(layer_list)
                     
         """
 

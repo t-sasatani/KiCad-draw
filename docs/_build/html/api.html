@@ -45,10 +45,10 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#PCBmodule.PCBdraw"><code class="docutils literal notranslate"><span class="pre">PCBdraw</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.drawhelix"><code class="docutils literal notranslate"><span class="pre">PCBdraw.drawhelix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.draw_helix"><code class="docutils literal notranslate"><span class="pre">PCBdraw.draw_helix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.draw_polyline_arc"><code class="docutils literal notranslate"><span class="pre">PCBdraw.draw_polyline_arc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.draw_via"><code class="docutils literal notranslate"><span class="pre">PCBdraw.draw_via()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.drawline"><code class="docutils literal notranslate"><span class="pre">PCBdraw.drawline()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.drawpolylinearc"><code class="docutils literal notranslate"><span class="pre">PCBdraw.drawpolylinearc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.drawvia"><code class="docutils literal notranslate"><span class="pre">PCBdraw.drawvia()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#PCBmodule.PCBdraw.open_pcbfile"><code class="docutils literal notranslate"><span class="pre">PCBdraw.open_pcbfile()</span></code></a></li>
 </ul>
 </li>
@@ -84,24 +84,16 @@
 <span id="api"></span><h1>API<a class="headerlink" href="#module-PCBmodule" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="PCBmodule.PCBdraw">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PCBmodule.</span></span><span class="sig-name descname"><span class="pre">PCBdraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Nlayer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nelement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viasize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drillsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PCBmodule.</span></span><span class="sig-name descname"><span class="pre">PCBdraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stackup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'default_4layer'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'default_6layer'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Python module for generating traces for KiCad PCB.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>Nlayer</strong> (<em>int</em>) – </p></li>
-<li><p><strong>net_number</strong> – </p></li>
-<li><p><strong>track_width</strong> – </p></li>
-<li><p><strong>connect_width</strong> – </p></li>
-<li><p><strong>Nelement</strong> – </p></li>
-<li><p><strong>viasize</strong> – </p></li>
-<li><p><strong>drillsize</strong> – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>layer_list</strong> (<em>Literal</em><em>[</em><em>&quot;default_4layer&quot;</em><em>, </em><em>&quot;default_6layer&quot;</em><em>]</em>) – layer stackup of the board.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="PCBmodule.PCBdraw.drawhelix">
-<span class="sig-name descname"><span class="pre">drawhelix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerindexlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabposition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'OUT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_angle_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.drawhelix" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.draw_helix">
+<span class="sig-name descname"><span class="pre">draw_helix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_gap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_index_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drill_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">via_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'IN'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'OUT'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'OUT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_angle_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PCBmodule.PCBdraw.draw_helix" title="Permalink to this definition">¶</a></dt>
 <dd><p>draw helix coil pattern</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -112,9 +104,42 @@
 <li><p><strong>portgap</strong> (<em>float</em>) – length of port opening</p></li>
 <li><p><strong>tabgap</strong> (<em>float</em>) – TBD</p></li>
 <li><p><strong>angle_step</strong> – TBD</p></li>
-<li><p><strong>layerindexlist</strong> (<em>list</em>) – list/order of layers to draw helix coil</p></li>
-<li><p><strong>tabposition</strong> (<em>string</em>) – defines position of tab for placing vias</p></li>
+<li><p><strong>layer_index_list</strong> (<em>list</em>) – list/order of layers to draw helix coil</p></li>
+<li><p><strong>track_width</strong> (<em>float</em>) – width of trace</p></li>
+<li><p><strong>track_width</strong> – width of connection trace</p></li>
+<li><p><strong>tab_position</strong> (<em>string</em>) – defines position of tab for placing vias (not working yet)</p></li>
+<li><p><strong>drill_size</strong> (<em>float</em>) – size of via in drill</p></li>
+<li><p><strong>via_size</strong> (<em>float</em>) – size of via</p></li>
+<li><p><strong>net_number</strong> (<em>int</em>) – index of net</p></li>
 <li><p><strong>base_angle_offset</strong> (<em>float</em>) – defines starting angle offset</p></li>
+<li><p><strong>segment_number</strong> (<em>int</em>) – number of segments of circle (default: 100)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertationError</strong> – when layer index exceeds len(layer_list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.draw_polyline_arc">
+<span class="sig-name descname"><span class="pre">draw_polyline_arc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PCBmodule.PCBdraw.draw_polyline_arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw arc-shaped conductive trace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>float</em>) – x-coordinate of arc center</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – y-coordinate of arc center</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – radius of arc</p></li>
+<li><p><strong>port_angle</strong> (<em>float</em>) – angle of arc opening</p></li>
+<li><p><strong>layer_index</strong> (<em>int</em>) – index of layer</p></li>
+<li><p><strong>net_number</strong> (<em>int</em>) – index of net</p></li>
+<li><p><strong>line_width</strong> (<em>float</em>) – width of trace</p></li>
+<li><p><strong>angle_offset</strong> (<em>float</em>) – offset of start angle of arc (default: 0)</p></li>
+<li><p><strong>segment_number</strong> (<em>int</em>) – number of segments of circle (default: 100)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -124,8 +149,43 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="PCBmodule.PCBdraw.draw_via">
+<span class="sig-name descname"><span class="pre">draw_via</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">via_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drill_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_index_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_index_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PCBmodule.PCBdraw.draw_via" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw via</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – x-coordinate of via</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – y-coordinate of via</p></li>
+<li><p><strong>via_size</strong> (<em>float</em>) – size of via</p></li>
+<li><p><strong>drill_size</strong> (<em>float</em>) – size of drill</p></li>
+<li><p><strong>net_number</strong> (<em>int</em>) – index of net</p></li>
+<li><p><strong>layer_index_1</strong> (<em>int</em>) – index of via start layer</p></li>
+<li><p><strong>layer_index_2</strong> (<em>int</em>) – index of via end layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertationError</strong> – when layer index exceeds len(layer_list)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PCBdraw_ins</span> <span class="o">=</span> <span class="n">PCBdraw</span><span class="p">(</span><span class="n">stackup</span><span class="o">=</span><span class="s1">&#39;default_4layer&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PCBdraw_ins</span><span class="o">.</span><span class="n">draw_via</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">111.76</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">107.315</span><span class="p">,</span> <span class="n">via_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">drill_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">layer_index_1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">layer_index_2</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">net_number</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">  (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers &quot;F.Cu&quot; &quot;B.Cu&quot;) (net 2) (tstamp 0))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Example KiCad via: (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers “F.Cu” “B.Cu”) (net 2) (tstamp 80a9442a-0307-48dc-b6c5-b41ea99e0e84))</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="PCBmodule.PCBdraw.drawline">
-<span class="sig-name descname"><span class="pre">drawline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayerString</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.drawline" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">drawline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PCBmodule.PCBdraw.drawline" title="Permalink to this definition">¶</a></dt>
 <dd><p>draw linear conductive trace</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -135,73 +195,26 @@
 <li><p><strong>x2</strong> (<em>float</em>) – x-coordinate of end point</p></li>
 <li><p><strong>y2</strong> (<em>float</em>) – y-coordinate of end point</p></li>
 <li><p><strong>line_width</strong> (<em>float</em>) – width of trace</p></li>
-<li><p><strong>LayerString</strong> (<em>string</em>) – name of layer</p></li>
+<li><p><strong>net_number</strong> (<em>int</em>) – index of net</p></li>
+<li><p><strong>layer_index</strong> (<em>int</em>) – index of layer</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertationError</strong> – when layer index exceeds len(layer_list)</p>
+</dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kicad_draw</span> <span class="o">=</span> <span class="n">PCBdraw</span><span class="p">(</span><span class="n">Nlayer</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">net_number</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kicad_draw</span><span class="o">.</span><span class="n">drawline</span><span class="p">(</span><span class="n">x1</span> <span class="o">=</span> <span class="mf">111.76</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="mf">104.14</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="mf">111.76</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="mf">108.635</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">LayerString</span> <span class="o">=</span> <span class="s2">&quot;F.Cu&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PCBdraw_ins</span> <span class="o">=</span> <span class="n">PCBdraw</span><span class="p">(</span><span class="n">stackup</span><span class="o">=</span><span class="s1">&#39;default_4layer&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PCBdraw_ins</span><span class="o">.</span><span class="n">drawline</span><span class="p">(</span><span class="n">x1</span> <span class="o">=</span> <span class="mf">111.76</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="mf">104.14</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="mf">111.76</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="mf">108.635</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">net_number</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">layer_index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="go">  (segment (start 111.76 104.14) (end 111.76 108.635) (width 0.4) (layer &quot;F.Cu&quot;) (net 2) (tstamp 0))</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Example KiCad line: (segment (start 111.76 104.14) (end 111.76 108.635) (width 0.4) (layer “F.Cu”) (net 2) (tstamp eada3255-4488-4dee-bc05-f72f23e4845a))</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PCBmodule.PCBdraw.drawpolylinearc">
-<span class="sig-name descname"><span class="pre">drawpolylinearc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portangle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayerString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angleOffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.drawpolylinearc" title="Permalink to this definition">¶</a></dt>
-<dd><p>draw arc-shaped conductive trace</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x0</strong> (<em>float</em>) – x-coordinate of arc center</p></li>
-<li><p><strong>y0</strong> (<em>float</em>) – y-coordinate of arc center</p></li>
-<li><p><strong>r1</strong> (<em>float</em>) – radius of arc</p></li>
-<li><p><strong>portangle</strong> (<em>float</em>) – angle of arc opening</p></li>
-<li><p><strong>LayerString</strong> (<em>string</em>) – name of layer</p></li>
-<li><p><strong>line_width</strong> (<em>float</em>) – width of trace</p></li>
-<li><p><strong>angleOffset</strong> (<em>float</em>) – offset of start angle of arc</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PCBmodule.PCBdraw.drawvia">
-<span class="sig-name descname"><span class="pre">drawvia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Layerstring1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Layerstring2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PCBmodule.PCBdraw.drawvia" title="Permalink to this definition">¶</a></dt>
-<dd><p>draw via</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>float</em>) – x-coordinate of via</p></li>
-<li><p><strong>y</strong> (<em>float</em>) – y-coordinate of via</p></li>
-<li><p><strong>LayerString1</strong> (<em>string</em>) – name of via start layer</p></li>
-<li><p><strong>LayerString2</strong> (<em>string</em>) – name of via end layer</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kicad_draw</span> <span class="o">=</span> <span class="n">PCBdraw</span><span class="p">(</span><span class="n">Nlayer</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">net_number</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">viasize</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">drillsize</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kicad_draw</span><span class="o">.</span><span class="n">drawvia</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">111.76</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">107.315</span><span class="p">,</span> <span class="n">Layerstring1</span> <span class="o">=</span> <span class="s2">&quot;F.Cu&quot;</span><span class="p">,</span> <span class="n">Layerstring2</span> <span class="o">=</span> <span class="s2">&quot;B.Cu&quot;</span><span class="p">)</span>
-<span class="go">  (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers &quot;F.Cu&quot; &quot;B.Cu&quot;) (net 2) (tstamp 0))</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Example KiCad line: (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers “F.Cu” “B.Cu”) (net 2) (tstamp 80a9442a-0307-48dc-b6c5-b41ea99e0e84))</p>
 </div>
 </dd></dl>
 
