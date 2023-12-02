@@ -2,6 +2,8 @@
 functions for drawing patterns on .pcb files
 """
 
+import numpy as np
+
 class drawPCB:
     """
     drawing hoge
