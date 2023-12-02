@@ -1,6 +1,11 @@
-import os
+"""
+functions for drawing patterns on .pcb files
+"""
 
 class drawPCB:
+    """
+    drawing hoge
+    """
     def __init__(self, Nlayer, net_number, track_width = 0.2, connect_width = 0.15, Nelement = 100, viasize = 0.3, drillsize = 0.15):
         if Nlayer == 4:
             self.layers = ["F.Cu", "In1.Cu", "In2.Cu", "B.Cu"]
