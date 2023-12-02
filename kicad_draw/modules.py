@@ -1,12 +1,7 @@
-"""
-functions for drawing patterns on .pcb files
-"""
-
 import numpy as np
 
 class drawPCB:
-    """
-    drawing hoge
+    """Summary line
     """
     def __init__(self, Nlayer, net_number, track_width = 0.2, connect_width = 0.15, Nelement = 100, viasize = 0.3, drillsize = 0.15):
         if Nlayer == 4:

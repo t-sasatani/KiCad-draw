@@ -7,34 +7,22 @@ Welcome to KiCad-draw's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Contents:
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   kicad_draw
 
 Features
 --------
-- Generate PCB traces for .kicad_pcb files
-
-Installation
-------------
-
-Install KiCad-draw by running:
-
-   pip install kicad-draw
+- Generate PCB traces for ``.kicad_pcb`` files
 
 Contributes
-----------
+------------
 
 - Issue Tracker: https://github.com/t-sasatani/KiCad-draw/issues
 - Source Code: https://github.com/t-sasatani/KiCad-draw
 
 License
--------
+------------
 
 The project is licensed under AGPL-3.0 license.

@@ -5,7 +5,7 @@ import sys
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
-sys.path.insert(0, os.path.abspath('../kicad_draw'))
+sys.path.insert(0, os.path.abspath('../kicad_draw/'))
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -27,7 +27,8 @@ extensions = [
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary'
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon'
     ]
 
 templates_path = ['_templates']
