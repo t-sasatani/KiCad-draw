@@ -7,10 +7,8 @@ Welcome to KiCad-draw's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
-
-
 
 Indices and tables
 ==================
@@ -21,30 +19,22 @@ Indices and tables
 
 Features
 --------
-
-- Be awesome
-- Make things faster
+- Generate PCB traces for .kicad_pcb files
 
 Installation
 ------------
 
-Install $project by running:
+Install KiCad-draw by running:
 
-    install project
+   pip install kicad-draw
 
-Contribute
+Contributes
 ----------
 
-- Issue Tracker: github.com/$project/$project/issues
-- Source Code: github.com/$project/$project
-
-Support
--------
-
-If you are having issues, please let us know.
-We have a mailing list located at: project@google-groups.com
+- Issue Tracker: https://github.com/t-sasatani/KiCad-draw/issues
+- Source Code: https://github.com/t-sasatani/KiCad-draw
 
 License
 -------
 
-The project is licensed under the BSD license.
+The project is licensed under AGPL-3.0 license.
