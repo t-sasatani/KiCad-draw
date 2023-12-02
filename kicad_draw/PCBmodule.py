@@ -1,23 +1,19 @@
 import numpy as np
 from kicad_draw.config import *
+from typing import Literal
 
 class PCBdraw:
     """ Python module for generating traces for KiCad PCB.
 
     Args:
-        Nlayer (int)
-        net_number
-        track_width
-        connect_width
-        Nelement
-        viasize
-        drillsize
+        layer_list (Literal["default_4layer", "default_6layer"]): layer stackup of the board.
 
     """
     #def __init__(self, Nlayer, net_number, track_width = 0.2, connect_width = 0.15, Nelement = 100, viasize = 0.3, drillsize = 0.15):
-    #def __init__(self):
-    @classmethod
-    def drawline(cls, x1, y1, x2, y2, line_width, LayerString, net_number):
+    def __init__(self, stackup: Literal[tuple(list(default_layers))]):
+        self.layer_list = default_layers[stackup]["layer_list"]
+        
+    def drawline(self, x1: float, y1: float, x2: float, y2: float, line_width: float, net_number: int, layer_index: int) -> None:
         """ draw linear conductive trace
 
         Args:
@@ -26,21 +22,31 @@ class PCBdraw:
             x2 (float): x-coordinate of end point
             y2 (float): y-coordinate of end point
             line_width (float): width of trace
-            LayerString (string): name of layer
+            net_number (int): index of net
+            layer_index (int): index of layer
         
         Returns:
             None
 
+        Raises:
+            AssertationError: when layer index exceeds len(layer_list)
+
         Example:
-            >>> kicad_draw = PCBdraw(Nlayer=6, net_number=2)
-            >>> kicad_draw.drawline(x1 = 111.76, y1 = 104.14, x2 = 111.76, y2 = 108.635, line_width = 0.4, LayerString = "F.Cu")
+            >>> PCBdraw_ins = PCBdraw(stackup='default_4layer')
+            >>> PCBdraw_ins.drawline(x1 = 111.76, y1 = 104.14, x2 = 111.76, y2 = 108.635, line_width = 0.4, net_number=2, layer_index=0)
               (segment (start 111.76 104.14) (end 111.76 108.635) (width 0.4) (layer "F.Cu") (net 2) (tstamp 0))
 
         Note:
             Example KiCad line: (segment (start 111.76 104.14) (end 111.76 108.635) (width 0.4) (layer "F.Cu") (net 2) (tstamp eada3255-4488-4dee-bc05-f72f23e4845a))
         
         """
-        print("  (segment (start " + str(x1) + " " + str(y1) + ") (end " + str(x2) + " " + str(y2) + ") (width " + str(line_width) + ") (layer \"" + LayerString + "\") (net " + str(net_number) + ") (tstamp 0))")
+        try:        
+            assert layer_index < len(self.layer_list)
+        except AssertionError as e:
+            print(f'layer_index is exceeds layer_list: {e}')
+
+        layer_name = self.layer_list[layer_index]
+        print("  (segment (start " + str(x1) + " " + str(y1) + ") (end " + str(x2) + " " + str(y2) + ") (width " + str(line_width) + ") (layer \"" + layer_name + "\") (net " + str(net_number) + ") (tstamp 0))")
 
     @classmethod
     def drawpolylinearc(cls, x0, y0, r1, portangle, LayerString, line_width, angleOffset=0, Nelement = 100):
