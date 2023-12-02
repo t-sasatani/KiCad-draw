@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>kicad_draw package &#8212; KiCad-draw  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">KiCad-draw  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">kicad_draw package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="kicad-draw-package">
+<h1>kicad_draw package<a class="headerlink" href="#kicad-draw-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-kicad_draw.modules">
+<span id="kicad-draw-modules-module"></span><h2>kicad_draw.modules module<a class="headerlink" href="#module-kicad_draw.modules" title="Permalink to this heading">¶</a></h2>
+<p>functions for drawing patterns on .pcb files</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kicad_draw.modules.drawPCB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kicad_draw.modules.</span></span><span class="sig-name descname"><span class="pre">drawPCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Nlayer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nelement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viasize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drillsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kicad_draw.modules.drawPCB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>drawing hoge</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kicad_draw.modules.drawPCB.open_pcbfile">
+<span class="sig-name descname"><span class="pre">open_pcbfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kicad_draw.modules.drawPCB.open_pcbfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kicad_draw.modules.drawPCB.writehelix">
+<span class="sig-name descname"><span class="pre">writehelix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layerindexlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabposition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'OUT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_angle_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kicad_draw.modules.drawPCB.writehelix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kicad_draw.modules.drawPCB.writeline">
+<span class="sig-name descname"><span class="pre">writeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayerString</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kicad_draw.modules.drawPCB.writeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kicad_draw.modules.drawPCB.writepolylinearc">
+<span class="sig-name descname"><span class="pre">writepolylinearc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portangle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayerString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angleOffset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kicad_draw.modules.drawPCB.writepolylinearc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kicad_draw.modules.drawPCB.writevia">
+<span class="sig-name descname"><span class="pre">writevia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Layerstring1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Layerstring2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kicad_draw.modules.drawPCB.writevia" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-kicad_draw">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-kicad_draw" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">kicad_draw package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-kicad_draw.modules">kicad_draw.modules module</a><ul>
+<li><a class="reference internal" href="#kicad_draw.modules.drawPCB"><code class="docutils literal notranslate"><span class="pre">drawPCB</span></code></a><ul>
+<li><a class="reference internal" href="#kicad_draw.modules.drawPCB.open_pcbfile"><code class="docutils literal notranslate"><span class="pre">drawPCB.open_pcbfile()</span></code></a></li>
+<li><a class="reference internal" href="#kicad_draw.modules.drawPCB.writehelix"><code class="docutils literal notranslate"><span class="pre">drawPCB.writehelix()</span></code></a></li>
+<li><a class="reference internal" href="#kicad_draw.modules.drawPCB.writeline"><code class="docutils literal notranslate"><span class="pre">drawPCB.writeline()</span></code></a></li>
+<li><a class="reference internal" href="#kicad_draw.modules.drawPCB.writepolylinearc"><code class="docutils literal notranslate"><span class="pre">drawPCB.writepolylinearc()</span></code></a></li>
+<li><a class="reference internal" href="#kicad_draw.modules.drawPCB.writevia"><code class="docutils literal notranslate"><span class="pre">drawPCB.writevia()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-kicad_draw">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/apis/kicad_draw.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">KiCad-draw  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">kicad_draw package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Takuya Sasatani.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    </div>
+  </body>
+</html>
