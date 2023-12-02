@@ -40,7 +40,15 @@ class PCBdraw:
         
         Returns:
             None
-            
+
+        Example:
+            >>> kicad_draw = PCBdraw(Nlayer=6, net_number=2)
+            >>> kicad_draw.drawline(x1 = 111.76, y1 = 104.14, x2 = 111.76, y2 = 108.635, line_width = 0.4, LayerString = "F.Cu")
+              (segment (start 111.76 104.14) (end 111.76 108.635) (width 0.4) (layer "F.Cu") (net 2) (tstamp 0))
+
+        Note:
+            Example KiCad line: (segment (start 111.76 104.14) (end 111.76 108.635) (width 0.4) (layer "F.Cu") (net 2) (tstamp eada3255-4488-4dee-bc05-f72f23e4845a))
+        
         """
         print("  (segment (start " + str(x1) + " " + str(y1) + ") (end " + str(x2) + " " + str(y2) + ") (width " + str(line_width) + ") (layer \"" + LayerString + "\") (net " + str(self.net_number) + ") (tstamp 0))")
 
@@ -79,7 +87,16 @@ class PCBdraw:
         
         Returns:
             None
-            
+        
+        Example:
+            >>> kicad_draw = PCBdraw(Nlayer=6, net_number=2, viasize = 0.8, drillsize = 0.4)
+            >>> kicad_draw.drawvia(x = 111.76, y = 107.315, Layerstring1 = "F.Cu", Layerstring2 = "B.Cu")
+              (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers "F.Cu" "B.Cu") (net 2) (tstamp 0))
+
+        Note:
+            Example KiCad line: (via (at 111.76 107.315) (size 0.8) (drill 0.4) (layers "F.Cu" "B.Cu") (net 2) (tstamp 80a9442a-0307-48dc-b6c5-b41ea99e0e84))
+
+                    
         """
         print("  (via (at "+ str(x) +" "+ str(y) +") (size " + str(self.viasize) + ") (drill "+ str(self.drillsize) +") (layers \""+Layerstring1+"\" \""+Layerstring2+"\") (net " + str(self.net_number) + ") (tstamp 0))")
 
