@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kicad-draw"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["t-sasatani <sasatani.dev@gmail.com>"]
 readme = "README.md"
