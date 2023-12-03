@@ -23,14 +23,9 @@ def test__can_draw_via(capsys):
 def test__can_draw_helix_coil(capsys):
     dir = os.path.dirname(__file__)
     assert_file_path = os.path.join(dir, 'assets','helix_coil_test.txt')
-    out_file_path = os.path.join(dir, 'test_output')
-    out_file_name = 'helix_coil_out.txt'
-    
+    out_file_path = os.path.join(dir, 'test_output', 'helix_coil_out.txt')
 
-    print(assert_file_path)
-    print(out_file_path + '/' + out_file_name)
-
-    sys.stdout = open(out_file_path + '/' + out_file_name, 'w')
+    sys.stdout = open(out_file_path, 'w')
 
     Center = [150, 100]
     track_width = 0.5
@@ -62,4 +57,4 @@ def test__can_draw_helix_coil(capsys):
     sys.stdout.close()
     sys.stdout = sys.__stdout__
 
-    assert filecmp.cmp(assert_file_path,out_file_path + '/' + out_file_name)
+    assert filecmp.cmp(assert_file_path,out_file_path)
