@@ -56,5 +56,6 @@ def test__can_draw_helix_coil(capsys):
     
     sys.stdout.close()
     sys.stdout = sys.__stdout__
-
-    assert filecmp.cmp(assert_file_path,out_file_path, shallow=False)
+    
+    filecmp.clear_cache()
+    assert filecmp.cmp(assert_file_path, out_file_path, shallow=False)
