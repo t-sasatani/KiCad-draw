@@ -30,3 +30,15 @@ jobs:
           emoji: false
           verbose: false
           job-summary: true
+      - name: save helix out file
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: helix out
+          path: ./tests/test_output/helix_coil_out.txt
+      - name: save helix asset file
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: helix out
+          path: ./tests/assets/helix_coil_test.txt
