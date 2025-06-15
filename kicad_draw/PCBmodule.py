@@ -54,9 +54,11 @@ class PCBdraw:
             assert layer_index < len(self.layer_list)
         except AssertionError as e:
             print(f'layer_index exceeds layer_list: {e}')
+            return
+
         layer_name = self.layer_list[layer_index]
 
-        print("  (segment (start " + str(x1) + " " + str(y1) + ") (end " + str(x2) + " " + str(y2) + ") (width " + str(line_width) + ") (layer \"" + layer_name + "\") (net " + str(net_number) + ") (tstamp 0))")
+        print("(segment (start " + str(x1) + " " + str(y1) + ") (end " + str(x2) + " " + str(y2) + ") (width " + str(line_width) + ") (layer \"" + layer_name + "\") (net " + str(net_number) + ") (tstamp 0))")
 
     def draw_polyline_arc(self, x0: float, y0: float, radius: float, port_angle: float, layer_index: int, net_number: int, line_width: float, angle_offset: float = 0, segment_number: int = 100) -> None:
         """ draw arc-shaped conductive trace
@@ -129,7 +131,7 @@ class PCBdraw:
 
         layer_names = [self.layer_list[layer_index_1], self.layer_list[layer_index_2]]
 
-        print("  (via (at "+ str(x) +" "+ str(y) +") (size " + str(via_size) + ") (drill "+ str(drill_size) +") (layers \""+layer_names[0]+"\" \""+layer_names[1]+"\") (net " + str(net_number) + ") (tstamp 0))")
+        print("(via (at "+ str(x) +" "+ str(y) +") (size " + str(via_size) + ") (drill "+ str(drill_size) +") (layers \""+layer_names[0]+"\" \""+layer_names[1]+"\") (net " + str(net_number) + ") (tstamp 0))")
 
     def draw_helix(self, x0: float,
                    y0: float,
@@ -245,7 +247,7 @@ class PCBdraw:
         try:
             self.file = open(path , "r+")
         except FileNotFoundError:
-            # doesn’t exist
+            # doesn't exist
             print('File doesn\'t exit')
         else:
             # exists
