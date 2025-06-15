@@ -73,7 +73,7 @@ jobs:
     
     - name: Get tag name
       id: tag
-      run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      run: echo "tag=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
     
     - name: Create GitHub Release
       run: |
