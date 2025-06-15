@@ -2461,19 +2461,25 @@
     </g>
   </g>
   <g class="legend">
-    <rect x="10" y="10" width="120" height="180" fill="rgba(0,0,0,0.8)" stroke="#666" rx="5"/>
+    <rect x="10" y="10" width="140" height="180" fill="rgba(0,0,0,0.8)" stroke="#666" rx="5"/>
     <text x="20" y="30" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Layers</text>
     <rect x="20" y="47" width="16" height="12" fill="#008080"/>
-    <text x="45" y="55" fill="white" font-family="Arial, sans-serif" font-size="12">B.Cu</text>
+    <text x="40" y="55" fill="#00FF00" font-family="Arial, sans-serif" font-size="10">👁</text>
+    <text x="55" y="55" fill="white" font-family="Arial, sans-serif" font-size="12">B.Cu</text>
     <rect x="20" y="67" width="16" height="12" fill="#C8860D"/>
-    <text x="45" y="75" fill="white" font-family="Arial, sans-serif" font-size="12">F.Cu</text>
+    <text x="40" y="75" fill="#00FF00" font-family="Arial, sans-serif" font-size="10">👁</text>
+    <text x="55" y="75" fill="white" font-family="Arial, sans-serif" font-size="12">F.Cu</text>
     <rect x="20" y="87" width="16" height="12" fill="#CC0000"/>
-    <text x="45" y="95" fill="white" font-family="Arial, sans-serif" font-size="12">In1.Cu</text>
+    <text x="40" y="95" fill="#00FF00" font-family="Arial, sans-serif" font-size="10">👁</text>
+    <text x="55" y="95" fill="white" font-family="Arial, sans-serif" font-size="12">In1.Cu</text>
     <rect x="20" y="107" width="16" height="12" fill="#00CC00"/>
-    <text x="45" y="115" fill="white" font-family="Arial, sans-serif" font-size="12">In2.Cu</text>
+    <text x="40" y="115" fill="#00FF00" font-family="Arial, sans-serif" font-size="10">👁</text>
+    <text x="55" y="115" fill="white" font-family="Arial, sans-serif" font-size="12">In2.Cu</text>
     <rect x="20" y="127" width="16" height="12" fill="#0000CC"/>
-    <text x="45" y="135" fill="white" font-family="Arial, sans-serif" font-size="12">In3.Cu</text>
+    <text x="40" y="135" fill="#00FF00" font-family="Arial, sans-serif" font-size="10">👁</text>
+    <text x="55" y="135" fill="white" font-family="Arial, sans-serif" font-size="12">In3.Cu</text>
     <rect x="20" y="147" width="16" height="12" fill="#CC00CC"/>
-    <text x="45" y="155" fill="white" font-family="Arial, sans-serif" font-size="12">In4.Cu</text>
+    <text x="40" y="155" fill="#00FF00" font-family="Arial, sans-serif" font-size="10">👁</text>
+    <text x="55" y="155" fill="white" font-family="Arial, sans-serif" font-size="12">In4.Cu</text>
   </g>
 </svg>
