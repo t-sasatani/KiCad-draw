@@ -67,19 +67,19 @@ def test__can_draw_helix_coil(capsys):
     kicad_draw = PCBdraw(stackup="default_6layer")
     kicad_draw.draw_helix(
         x0=Center[0],
-                        y0=Center[1],
-                        radius=radius,
-                        track_width=track_width,
-                        connect_width=connect_width,
-                        port_gap=port_gap,
-                        net_number=netnumber,
-                        drill_size=drill_size,
-                        via_size=via_size,
-                        tab_gap=tab_gap,
-                        angle_step=angle_step,
+        y0=Center[1],
+        radius=radius,
+        track_width=track_width,
+        connect_width=connect_width,
+        port_gap=port_gap,
+        net_number=netnumber,
+        drill_size=drill_size,
+        via_size=via_size,
+        tab_gap=tab_gap,
+        angle_step=angle_step,
         layer_index_list=layerindexlist,
     )
-    
+
     sys.stdout.close()
     sys.stdout = sys.__stdout__
 
@@ -92,13 +92,13 @@ def test__can_draw_helix_coil(capsys):
     for i in range(len(file1_lines)):
         try:
             assert file1_lines[i] == file2_lines[i]
-        except: 
+        except:
             print("Line " + str(i + 1) + " doesn't match.")
             print("------------------------")
             print("File1: " + file1_lines[i])
             print("File2: " + file2_lines[i])
     file1.close()
     file2.close()
-    
+
     # filecmp.clear_cache()
     # assert filecmp.cmp(assert_file_path, out_file_path, shallow=False)
