@@ -7,10 +7,7 @@ for generating API documentation and user guides.
 import os
 import sys
 
-import sphinx_rtd_theme
-
-html_theme = "sphinx_rtd_theme"
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = "furo"
 
 sys.path.insert(0, os.path.abspath("../kicad_draw/"))
 
@@ -47,3 +44,18 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+# -- Furo theme options -----------------------------------------------------
+html_theme_options = {
+    "sidebar_hide_name": True,
+    "light_css_variables": {
+        "color-brand-primary": "#2980b9",
+        "color-brand-content": "#2980b9",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#3498db",
+        "color-brand-content": "#3498db",
+    },
+}
+
+html_title = "KiCad-draw Documentation"
