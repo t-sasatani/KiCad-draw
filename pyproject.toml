@@ -1,30 +1,93 @@
-[tool.poetry]
+[project]
 name = "kicad-draw"
-version = "0.2.1"
-description = ""
-authors = ["t-sasatani <sasatani.dev@gmail.com>"]
+dynamic = ["version"]
+description = "Python module for generating traces for KiCad PCB."
+authors = [{ name = "t-sasatani", email = "sasatani.dev@gmail.com" }]
+requires-python = ">=3.10,<3.13"
 readme = "README.md"
-packages = [{include = "kicad_draw"}]
+dependencies = [
+    "numpy>=1.25.2,<2",
+    "black[jupyter]>=25.1.0,<26",
+    "isort>=6.0.1,<7",
+    "ruff>=0.11.6,<0.12",
+    "pytest>=8.0.0,<9",
+    "pytest-cov>=4.1.0,<5",
+    "ipykernel>=6.29.5,<7",
+    "sphinx>=8.1.3,<9",
+    "sphinx_rtd_theme>=3.0.2,<4",
+    "myst-parser>=4.0.1,<5",
+    "click>=8.1.7,<9",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-numpy = "^1.25.2"
-pytest = "^7.4.3"
+[project.scripts]
+kicad-draw = "kicad_draw.cli:main"
 
-[tool.poetry.group.dev.dependencies]
-ipykernel = "^6.25.0"
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0,<9",
+    "pytest-cov>=4.1.0,<5",
+    "pytest-mock>=3.12.0,<4",
+]
+docs = [
+    "sphinx>=8.1.3,<9",
+    "sphinx_rtd_theme>=3.0.2,<4",
+    "myst-parser>=4.0.1,<5",
+]
+
+[dependency-groups]
+dev = ["ipykernel>=6.29.5,<7"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
+[tool.black]
+line-length = 88
 
-[tool.poetry.group.docs]
-optional = true
+[tool.ruff]
+line-length = 88
 
-[tool.poetry.group.docs.dependencies]
-sphinx = "^6.2.1"
-furo = ">=2023.5.20,<2023.07.26"
-myst-parser = "^2.0.0"
-autodoc-pydantic = "^2.0.1"
-sphinx_rtd_theme = "^2.0"
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "C",
+    "D",
+]
+ignore = [
+    "E501",  # Ignore line length errors, handled by Black
+    "D200",  # Ignore One-line docstring should be in one line
+    "D205",  # Ignore blank line required between summary line and description
+    "D212",  # Ignore multi-line docstring summary should start at the first line
+    "D213",  # Ignore multi-line docstring summary should start at the second line
+    "C901",  # Ignore function is too complex, to be removed in the future
+    "D203",  # Ignore 1 blank line required before class docstring
+    "D401",  # Ignore first line should be in imperative mood
+]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = [
+    "--verbose",
+    "--cov=kicad_draw",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["kicad_draw"]
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { version_scheme = "post-release" }

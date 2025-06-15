@@ -1,0 +1,20 @@
+name: Check Code Formatting
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  format:
+    name: Check Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install "black[jupyter]" isort
+      - name: Check Black formatting
+        run: black --check .
+      - name: Check isort formatting
+        run: isort --check-only . 

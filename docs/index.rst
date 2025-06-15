@@ -12,6 +12,7 @@ Contents
 
    usage
    api
+   dev
 
 Features
 --------
