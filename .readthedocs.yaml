@@ -20,7 +20,6 @@ build:
     python: "3.10"
   jobs:
     post_create_environment:
-      - pip install poetry
-      - poetry config virtualenvs.create false
+      - pip install sphinx sphinx_rtd_theme myst-parser
     post_install:
-      - poetry install --with docs
+      - pip install -e .
