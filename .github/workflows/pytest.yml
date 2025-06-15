@@ -24,10 +24,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: pip install .[test] pytest pytest-md pytest-emoji
+        run: pip install .[test] pytest
       - uses: pavelzw/pytest-action@v2
         with:
-          emoji: false
           verbose: false
           job-summary: true
       - name: save helix out file
