@@ -75,8 +75,8 @@ def test_draw_polyline_arc(pcb_4layer_file):
 
 
 def test_draw_helix(pcb_4layer_file):
-    """Test drawing a helix with legacy parameters."""
-    pcb_4layer_file.draw_helix(
+    """Test drawing a helix with new HelixParams API."""
+    params = HelixParams(
         x0=150.0,
         y0=100.0,
         radius=10.0,
@@ -91,6 +91,9 @@ def test_draw_helix(pcb_4layer_file):
         net_number=1,
         segment_number=10,
     )
+
+    pcb_4layer_file.draw_helix(params)
+
     # Should generate segments and vias
     assert len(pcb_4layer_file.elements) > 0
     # Check that we have both segments and vias
