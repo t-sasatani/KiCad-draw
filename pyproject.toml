@@ -34,6 +34,9 @@ docs = [
     "sphinx_rtd_theme>=3.0.2,<4",
     "myst-parser>=4.0.1,<5",
 ]
+viz = [
+    "matplotlib>=3.5.0,<4",
+]
 
 [dependency-groups]
 dev = ["ipykernel>=6.29.5,<7"]

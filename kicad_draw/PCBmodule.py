@@ -1,6 +1,6 @@
 """Module for generating traces for KiCad PCB."""
 
-from typing import List, Literal
+from typing import List, Literal, Optional
 
 import numpy as np
 
@@ -9,6 +9,7 @@ from kicad_draw.formatter import KiCadFormatter
 from kicad_draw.geometry import Arc, Line, Point, Via
 from kicad_draw.layers import LayerManager
 from kicad_draw.models import HelixRectangleParams
+from kicad_draw.visualizer import PCBVisualizer
 
 # Constants for geometric calculations
 HALF_DIVISOR = 2
@@ -43,18 +44,21 @@ class PCBdraw:
         self,
         stackup: Literal[tuple(default_layers)],
         mode: Literal["print", "file"] = "print",
+        visualizer: Optional[PCBVisualizer] = None,
     ):
         """Initialize PCBdraw with stackup.
 
         Args:
             stackup: The PCB stackup configuration
             mode: Operation mode - "print" for direct s-expression output, "file" for collecting elements
+            visualizer: Optional PCBVisualizer instance for SVG output
 
         """
         self.layer_manager = LayerManager(stackup)
         self.formatter = KiCadFormatter()
         self.mode = mode
         self.elements = []  # Buffer to collect s-expressions when in file mode
+        self.visualizer = visualizer
 
     def _output(self, s_expr: str) -> None:
         """Output s-expression based on current mode."""
@@ -81,6 +85,10 @@ class PCBdraw:
         )
         layer = self.layer_manager.get_layer_name(layer_index)
         self._output(self.formatter.format_segment(line, layer, net_number))
+
+        # Add to visualizer if present
+        if self.visualizer:
+            self.visualizer.add_line(x1, y1, x2, y2, line_width, layer)
 
     def draw_polyline_arc(
         self,
@@ -137,6 +145,10 @@ class PCBdraw:
         )
         layers = self.layer_manager.get_layer_names([layer_index_1, layer_index_2])
         self._output(self.formatter.format_via(via, layers, net_number))
+
+        # Add to visualizer if present
+        if self.visualizer:
+            self.visualizer.add_via(x, y, via_size)
 
     def draw_helix(
         self,
@@ -521,6 +533,54 @@ class PCBdraw:
             f.write(new_content)
 
         print(f"PCB elements saved to {output_path}")
+
+    def enable_visualization(self, width: float = 800, height: float = 600) -> None:
+        """Enable SVG visualization.
+
+        Args:
+            width: SVG canvas width in pixels
+            height: SVG canvas height in pixels
+        """
+        self.visualizer = PCBVisualizer(width, height)
+
+    def save_svg(self, filename: str) -> None:
+        """Save current visualization as SVG file.
+
+        Args:
+            filename: Output SVG filename
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.save_svg(filename)
+
+    def get_svg(self) -> str:
+        """Get SVG string of current visualization.
+
+        Returns:
+            SVG string, or empty string if visualization not enabled
+        """
+        if not self.visualizer:
+            return ""
+        return self.visualizer.generate_svg()
+
+    def show_svg(self) -> None:
+        """Display SVG in Jupyter notebook or print SVG string."""
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+
+        svg_content = self.visualizer.generate_svg()
+
+        # Try to display in Jupyter
+        try:
+            from IPython.display import SVG, display
+
+            display(SVG(svg_content))
+        except ImportError:
+            # Not in Jupyter, print SVG
+            print("SVG content (save to .svg file to view):")
+            print(svg_content)
 
     """
     def drawspiral_2layer(self, x0, y0, rstart, rend, Nturns, Portgap, Nelement, layer_index1, layer_index2, TrackWidth, Connectwidth, net_number):
