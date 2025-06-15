@@ -5,6 +5,36 @@ All notable changes to KiCad-draw will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2025-06-15
+
+### Fixed
+- **CRITICAL**: PyPI publishing compatibility - eliminated local version identifiers that were causing upload failures
+- Resolved `hatch-vcs` configuration issue that generated versions like `0.5.0.post0+gfa3a842.d20250615` 
+- Clean version generation now produces standard versions compatible with PyPI (e.g., `0.5.1`)
+
+### Changed
+- Updated `hatch-vcs` configuration to use `local_scheme = "no-local-version"` instead of `version_scheme = "post-release"`
+- Added `hatch-vcs` and `hatchling` to dev dependencies for better development experience
+- Improved package versioning stability for automated publishing
+
+### Infrastructure
+- Fixed automated PyPI publishing pipeline - packages now upload successfully without version conflicts
+- Enhanced build reproducibility by eliminating dependency on workspace state for version generation
+- Streamlined development workflow with proper version management tools
+
+## [0.5.0] - 2025-06-15
+
+### Infrastructure
+- Resolved multiple package build issue - eliminated legacy `kicad_coil_maker` package artifacts 
+- Cleaned up committed distribution files that were causing PyPI upload conflicts
+- Fixed git repository state to prevent old package versions from being included in builds
+- Added proper `.gitignore` for `dist/` directory to prevent future distribution file commits
+
+### Fixed
+- PyPI trusted publisher authentication working correctly - no more "Non-user identities cannot create new projects" errors
+- Build pipeline now generates single, correct package instead of multiple conflicting packages
+- Git tag and package name consistency resolved
+
 ## [0.4.2] - 2025-06-15
 
 ### Fixed
@@ -132,6 +162,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Key Features | Breaking Changes |
 |---------|-------------|------------------|
+| 0.5.1 | PyPI publishing fix, clean version generation | None |
+| 0.5.0 | Repository cleanup, build pipeline fixes | None |
 | 0.4.2 | GitHub Pages docs, build fixes, streamlined maintenance | None |
 | 0.4.1 | Automated publishing, GitHub Actions, trusted publishers | None |
 | 0.4.0 | Tab alignment fix, via spacing consistency, comprehensive docs | None |
@@ -140,6 +172,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | 0.1.0 | Basic circular coils, KiCad export | Initial release |
 
 ## Migration Guide
+
+### From 0.5.0 to 0.5.1
+- No breaking changes - pure infrastructure fix for PyPI publishing
+- No code changes required - same API
+- Version generation now more reliable and PyPI-compatible
+
+### From 0.4.2 to 0.5.0
+- No breaking changes - pure infrastructure improvements
+- No code changes required - same API  
+- Build pipeline now more robust with cleaned git repository state
 
 ### From 0.4.1 to 0.4.2
 - No breaking changes - pure infrastructure improvements  
