@@ -33,6 +33,7 @@ jobs:
   publish:
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       id-token: write  # Required for trusted publishing
     
@@ -55,19 +56,55 @@ jobs:
     - name: Build package
       run: uv run python -m build
     
-    - name: Publish to PyPI
+    # Retry mechanism for PyPI publishing to handle Rekor server issues
+    - name: Publish to PyPI (attempt 1)
+      id: publish_attempt_1
+      continue-on-error: true
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         verbose: true
+        skip-existing: true
+        attestations: true  # Enable attestations but allow fallback
+    
+    - name: Wait before retry (if first attempt failed)
+      if: steps.publish_attempt_1.outcome == 'failure'
+      run: |
+        echo "First attempt failed, waiting 60 seconds before retry..."
+        sleep 60
+    
+    - name: Publish to PyPI (attempt 2)
+      id: publish_attempt_2
+      if: steps.publish_attempt_1.outcome == 'failure'
+      continue-on-error: true
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+        skip-existing: true
+        attestations: true
+    
+    - name: Wait before final retry (if second attempt failed)
+      if: steps.publish_attempt_1.outcome == 'failure' && steps.publish_attempt_2.outcome == 'failure'
+      run: |
+        echo "Second attempt failed, waiting 120 seconds before final retry..."
+        sleep 120
+    
+    - name: Publish to PyPI (final attempt)
+      if: steps.publish_attempt_1.outcome == 'failure' && steps.publish_attempt_2.outcome == 'failure'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+        skip-existing: true
+        attestations: false  # Disable attestations on final attempt to avoid Rekor issues
 
   create-release:
     needs: publish
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Need full history for changelog
+        fetch-depth: 0
     
     - name: Get tag name
       id: tag
@@ -76,19 +113,20 @@ jobs:
     - name: Extract changelog
       id: changelog
       run: |
-        # Extract changelog section for this version
         VERSION="${{ steps.tag.outputs.tag }}"
-        # Simple extraction - you can make this more sophisticated
         echo "Creating release for $VERSION"
         echo "changes=Released $VERSION with critical bug fixes and enhanced documentation. See CHANGELOG.md for full details." >> $GITHUB_OUTPUT
     
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create GitHub Release (with retries)
+      uses: nick-fields/retry@v3
       with:
-        tag_name: ${{ steps.tag.outputs.tag }}
-        release_name: Release ${{ steps.tag.outputs.tag }}
-        body: ${{ steps.changelog.outputs.changes }}
-        draft: false
-        prerelease: false 
+        timeout_minutes: 5
+        max_attempts: 3
+        retry_wait_seconds: 15
+        command: |
+          gh release create ${{ steps.tag.outputs.tag }} \
+            --title "Release ${{ steps.tag.outputs.tag }}" \
+            --notes "${{ steps.changelog.outputs.changes }}" \
+            --latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
