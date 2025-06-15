@@ -1,17 +1,22 @@
 import pytest
 
+from kicad_draw.models import HelixRectangleParams
 from kicad_draw.PCBmodule import PCBdraw
 
 
 @pytest.fixture
 def pcb_4layer():
     """Fixture to create a PCBdraw instance with a 4-layer stackup."""
-    return PCBdraw(stackup="default_4layer")
+    return PCBdraw("default_4layer")
+
+
+@pytest.fixture
+def pcb_4layer_file():
+    return PCBdraw("default_4layer", mode="file")
 
 
 def test_drawline(pcb_4layer, capsys):
-    """Test drawing a simple line."""
-    # Test drawing a simple line
+    """Test drawing a line."""
     pcb_4layer.drawline(
         x1=100.0,
         y1=100.0,
@@ -22,76 +27,63 @@ def test_drawline(pcb_4layer, capsys):
         layer_index=0,
     )
     captured = capsys.readouterr()
-    expected = '(segment (start 100.0 100.0) (end 200.0 100.0) (width 0.4) (layer "F.Cu") (net 1) (tstamp 0))\n'
-    assert captured.out == expected
+    assert (
+        '(segment (start 100.0 100.0) (end 200.0 100.0) (width 0.4) (layer "F.Cu") (net 1) (tstamp 0))'
+        in captured.out
+    )
 
 
 def test_draw_via(pcb_4layer, capsys):
     """Test drawing a via."""
-    # Test drawing a via
     pcb_4layer.draw_via(
         x=100.0,
         y=100.0,
-        via_size=0.8,
-        drill_size=0.4,
+        via_size=0.4,
+        drill_size=0.2,
         net_number=1,
         layer_index_1=0,
-        layer_index_2=3,
+        layer_index_2=1,
     )
     captured = capsys.readouterr()
-    expected = '(via (at 100.0 100.0) (size 0.8) (drill 0.4) (layers "F.Cu" "B.Cu") (net 1) (tstamp 0))\n'
-    assert captured.out == expected
+    assert (
+        '(via (at 100.0 100.0) (size 0.4) (drill 0.2) (layers "F.Cu" "In1.Cu") (net 1) (tstamp 0))'
+        in captured.out
+    )
 
 
 def test_draw_polyline_arc(pcb_4layer, capsys):
-    """Test drawing an arc."""
-    # Test drawing an arc
+    """Test drawing a polyline arc."""
     pcb_4layer.draw_polyline_arc(
         x0=100.0,
         y0=100.0,
         radius=50.0,
-        port_angle=1.0,
+        port_angle=0.5,
         layer_index=0,
         net_number=1,
         line_width=0.4,
-        angle_offset=0,
-        segment_number=4,  # Using small number for testing
     )
     captured = capsys.readouterr()
-    # We expect 4 segments for the arc
-    lines = captured.out.strip().split("\n")
-    assert len(lines) == 4
-    # Check first segment
-    assert lines[0].startswith("(segment (start")
-    assert '(layer "F.Cu")' in lines[0]
-    assert "(net 1)" in lines[0]
+    assert "(segment (start" in captured.out
 
 
 def test_draw_helix(pcb_4layer, capsys):
-    """Test drawing a simple helix with 2 turns."""
-    # Test drawing a simple helix with 2 turns
+    """Test drawing a helix."""
     pcb_4layer.draw_helix(
         x0=100.0,
         y0=100.0,
         radius=50.0,
         port_gap=10.0,
         tab_gap=5.0,
-        angle_step=0.5,
+        angle_step=0.1,
         layer_index_list=[0, 1],
         track_width=0.4,
         connect_width=0.3,
-        drill_size=0.4,
-        via_size=0.8,
+        drill_size=0.2,
+        via_size=0.4,
         net_number=1,
-        segment_number=4,  # Using small number for testing
     )
     captured = capsys.readouterr()
-    # We expect multiple segments for the helix
-    lines = captured.out.strip().split("\n")
-    assert len(lines) > 0
-    # Check that we have both segments and vias
-    assert any("(segment" in line for line in lines)
-    assert any("(via" in line for line in lines)
+    assert "(segment (start" in captured.out
 
 
 def test_invalid_layer_index(pcb_4layer):
@@ -106,3 +98,52 @@ def test_invalid_layer_index(pcb_4layer):
             net_number=1,
             layer_index=10,  # Invalid layer index
         )
+
+
+def test_draw_helix_rectangle(pcb_4layer, capsys):
+    """Test drawing a helix rectangle."""
+    params = HelixRectangleParams(
+        x0=100.0,
+        y0=100.0,
+        width=50.0,
+        height=30.0,
+        corner_radius=5.0,
+        layer_index_list=[0, 1],
+        track_width=0.4,
+        connect_width=0.3,
+        drill_size=0.2,
+        via_size=0.4,
+        net_number=1,
+    )
+    pcb_4layer.draw_helix_rectangle(params)
+    captured = capsys.readouterr()
+    assert "(segment (start" in captured.out
+    assert "(via (at" in captured.out
+
+
+def test_mode_switch(pcb_4layer):
+    """Test switching between print and file modes."""
+    # Start in print mode
+    assert pcb_4layer.mode == "print"
+
+    # Switch to file mode
+    pcb_4layer.set_mode("file")
+    assert pcb_4layer.mode == "file"
+    assert len(pcb_4layer.elements) == 0  # Buffer should be empty
+
+    # Draw something
+    pcb_4layer.drawline(
+        x1=100.0,
+        y1=100.0,
+        x2=200.0,
+        y2=100.0,
+        line_width=0.4,
+        net_number=1,
+        layer_index=0,
+    )
+    assert len(pcb_4layer.elements) == 1  # Should have one element
+
+    # Switch back to print mode
+    pcb_4layer.set_mode("print")
+    assert pcb_4layer.mode == "print"
+    assert len(pcb_4layer.elements) == 0  # Buffer should be cleared

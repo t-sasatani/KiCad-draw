@@ -3,20 +3,40 @@
 from typing import List, Literal
 
 import numpy as np
+from pydantic import BaseModel
 
 from kicad_draw.config import default_layers
 from kicad_draw.formatter import KiCadFormatter
 from kicad_draw.geometry import Arc, Line, Point, Via
 from kicad_draw.layers import LayerManager
+from kicad_draw.models import HelixRectangleParams
 
 
 class PCBdraw:
     """Module for generating traces for KiCad PCB."""
 
-    def __init__(self, stackup: Literal[tuple(list(default_layers))]):
-        """Initialize the PCBdraw class with the specified stackup."""
+    def __init__(
+        self,
+        stackup: Literal[tuple(list(default_layers))],
+        mode: Literal["print", "file"] = "print",
+    ):
+        """Initialize PCBdraw with stackup.
+
+        Args:
+            stackup: The PCB stackup configuration
+            mode: Operation mode - "print" for direct s-expression output, "file" for collecting elements
+        """
         self.layer_manager = LayerManager(stackup)
         self.formatter = KiCadFormatter()
+        self.mode = mode
+        self.elements = []  # Buffer to collect s-expressions when in file mode
+
+    def _output(self, s_expr: str) -> None:
+        """Output s-expression based on current mode."""
+        if self.mode == "print":
+            print(s_expr)
+        else:  # file mode
+            self.elements.append(s_expr)
 
     def drawline(
         self,
@@ -35,7 +55,7 @@ class PCBdraw:
             width=line_width,
         )
         layer = self.layer_manager.get_layer_name(layer_index)
-        print(self.formatter.format_segment(line, layer, net_number))
+        self._output(self.formatter.format_segment(line, layer, net_number))
 
     def draw_polyline_arc(
         self,
@@ -91,7 +111,7 @@ class PCBdraw:
             drill_size=drill_size,
         )
         layers = self.layer_manager.get_layer_names([layer_index_1, layer_index_2])
-        print(self.formatter.format_via(via, layers, net_number))
+        self._output(self.formatter.format_via(via, layers, net_number))
 
     def draw_helix(
         self,
@@ -181,6 +201,100 @@ class PCBdraw:
                     net_number=net_number,
                 )
 
+    def draw_helix_rectangle(
+        self,
+        params: HelixRectangleParams,
+    ) -> None:
+        """Draw a rectangle with rounded corners for each layer in layer_index_list."""
+        corners = [
+            Point(
+                params.x0 - params.width / 2, params.y0 - params.height / 2
+            ),  # bottom-left
+            Point(
+                params.x0 + params.width / 2, params.y0 - params.height / 2
+            ),  # bottom-right
+            Point(
+                params.x0 + params.width / 2, params.y0 + params.height / 2
+            ),  # top-right
+            Point(
+                params.x0 - params.width / 2, params.y0 + params.height / 2
+            ),  # top-left
+        ]
+
+        for layer_index in params.layer_index_list:
+            for i in range(4):
+                start = corners[i]
+                end = corners[(i + 1) % 4]
+                self.drawline(
+                    x1=start.x,
+                    y1=start.y,
+                    x2=end.x,
+                    y2=end.y,
+                    line_width=params.track_width,
+                    layer_index=layer_index,
+                    net_number=params.net_number,
+                )
+
+            for i in range(4):
+                corner = corners[i]
+                if i == 0:  # bottom-left
+                    center = Point(
+                        corner.x + params.corner_radius, corner.y + params.corner_radius
+                    )
+                    start_angle = np.pi
+                    end_angle = 3 * np.pi / 2
+                elif i == 1:  # bottom-right
+                    center = Point(
+                        corner.x - params.corner_radius, corner.y + params.corner_radius
+                    )
+                    start_angle = 3 * np.pi / 2
+                    end_angle = 2 * np.pi
+                elif i == 2:  # top-right
+                    center = Point(
+                        corner.x - params.corner_radius, corner.y - params.corner_radius
+                    )
+                    start_angle = 0
+                    end_angle = np.pi / 2
+                else:  # top-left
+                    center = Point(
+                        corner.x + params.corner_radius, corner.y - params.corner_radius
+                    )
+                    start_angle = np.pi / 2
+                    end_angle = np.pi
+
+                arc = Arc(
+                    center=center,
+                    radius=params.corner_radius,
+                    start_angle=start_angle,
+                    end_angle=end_angle,
+                    width=params.track_width,
+                )
+                points = arc.to_points(params.segment_number)
+                for j in range(len(points) - 1):
+                    self.drawline(
+                        x1=points[j].x,
+                        y1=points[j].y,
+                        x2=points[j + 1].x,
+                        y2=points[j + 1].y,
+                        line_width=params.track_width,
+                        layer_index=layer_index,
+                        net_number=params.net_number,
+                    )
+
+            if layer_index != params.layer_index_list[-1]:
+                next_layer = params.layer_index_list[
+                    params.layer_index_list.index(layer_index) + 1
+                ]
+                self.draw_via(
+                    x=corners[2].x,
+                    y=corners[2].y,
+                    via_size=params.via_size,
+                    drill_size=params.drill_size,
+                    net_number=params.net_number,
+                    layer_index_1=layer_index,
+                    layer_index_2=next_layer,
+                )
+
     def open_pcbfile(self, path):
         """Open pcb file **(not used yet)**."""
         try:
@@ -191,6 +305,53 @@ class PCBdraw:
         else:
             # exists
             print("opened:" + path)
+
+    def set_mode(self, mode: Literal["print", "file"]) -> None:
+        """Switch between print and file modes.
+
+        Args:
+            mode: "print" for direct s-expression output, "file" for collecting elements
+        """
+        if mode != self.mode:
+            self.mode = mode
+            self.elements = []  # Always clear buffer when switching modes
+
+    def save(self, output_path: str, template_path: str = "asset.kicad_pcb") -> None:
+        """Save PCB elements to a KiCad PCB file using a template.
+
+        This method only works when in file mode.
+        """
+        if self.mode != "file":
+            print("Warning: Not in file mode. Use set_mode('file') first.")
+            return
+
+        try:
+            with open(template_path, "r") as f:
+                template_content = f.read()
+        except FileNotFoundError:
+            print(f"Template file {template_path} not found.")
+            return
+
+        # Find the last closing parenthesis of the file
+        last_closing = template_content.rstrip().rfind(")")
+        if last_closing == -1:
+            print("Invalid template file format.")
+            return
+
+        # Insert our elements before the last closing parenthesis
+        new_content = (
+            template_content[:last_closing]
+            + "\n"
+            + "\n".join(self.elements)
+            + "\n"
+            + template_content[last_closing:]
+        )
+
+        # Write the modified content to the output file
+        with open(output_path, "w") as f:
+            f.write(new_content)
+
+        print(f"PCB elements saved to {output_path}")
 
     """
     def drawspiral_2layer(self, x0, y0, rstart, rend, Nturns, Portgap, Nelement, layer_index1, layer_index2, TrackWidth, Connectwidth, net_number):
@@ -218,3 +379,18 @@ class PCBdraw:
                 y2 = y0 + ((rstart + r_inc * (i+1)) * np.sin(port_angle2))
                 self.drawline (x1, y1, x2, y2, Connectwidth, self.layers[layer_index2], net_number)
     """
+
+
+class HelixRectangleParams(BaseModel):
+    x0: float
+    y0: float
+    width: float
+    height: float
+    corner_radius: float
+    layer_index_list: List[int]
+    track_width: float
+    connect_width: float
+    drill_size: float
+    via_size: float
+    net_number: int
+    segment_number: int = 100
