@@ -254,7 +254,12 @@ class PCBdraw:
             for turn in range(len(params.layer_index_list)):
                 # Calculate port offset for this layer using the same approach as circular helix
                 # Use port_gap directly for consistent spacing, similar to circular helix
-                port_offset = params.port_gap * turn - params.port_gap * (len(params.layer_index_list) - 1) / Math.HALF_DIVISOR
+                port_offset = (
+                    params.port_gap * turn
+                    - params.port_gap
+                    * (len(params.layer_index_list) - 1)
+                    / Math.HALF_DIVISOR
+                )
 
                 # Port positions on the right side
                 port_top_y = (
