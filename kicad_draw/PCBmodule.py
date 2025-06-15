@@ -61,10 +61,11 @@ class PCBdraw:
         self.mode = mode
         self.elements = []  # Buffer to collect s-expressions when in file mode
         self.visualizer = visualizer
-        
+
         # Enable visualization by default for better user experience
         if enable_visualization and not self.visualizer:
             from .visualizer import PCBVisualizer
+
             self.visualizer = PCBVisualizer()
 
     def _output(self, s_expr: str) -> None:
@@ -547,10 +548,12 @@ class PCBdraw:
         Args:
             width: SVG canvas width in pixels
             height: SVG canvas height in pixels
+
         """
         from .visualizer import PCBVisualizer
+
         self.visualizer = PCBVisualizer(width, height)
-        
+
     def disable_visualization(self) -> None:
         """Disable SVG visualization to save memory."""
         self.visualizer = None
@@ -560,6 +563,7 @@ class PCBdraw:
 
         Args:
             filename: Output SVG filename
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
@@ -571,6 +575,7 @@ class PCBdraw:
 
         Returns:
             SVG string, or empty string if visualization not enabled
+
         """
         if not self.visualizer:
             return ""
@@ -599,6 +604,7 @@ class PCBdraw:
 
         Args:
             layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
@@ -610,6 +616,7 @@ class PCBdraw:
 
         Args:
             layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
@@ -624,6 +631,7 @@ class PCBdraw:
 
         Returns:
             True if layer is now visible, False if hidden
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
@@ -635,6 +643,7 @@ class PCBdraw:
 
         Args:
             layer: Layer name to show exclusively
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
@@ -660,6 +669,7 @@ class PCBdraw:
 
         Returns:
             True if vias are now visible, False if hidden
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
@@ -671,6 +681,7 @@ class PCBdraw:
 
         Returns:
             List of layer names, or empty list if visualization not enabled
+
         """
         if not self.visualizer:
             return []
@@ -681,54 +692,65 @@ class PCBdraw:
 
         Returns:
             List of visible layer names, or empty list if visualization not enabled
+
         """
         if not self.visualizer:
             return []
         return self.visualizer.get_visible_layers()
-        
+
     def set_via_visibility(self, visible: bool) -> None:
         """Control via visibility in visualization.
-        
+
         Args:
             visible: True to show vias, False to hide them
+
         """
         if not self.visualizer:
             print("Visualization not enabled. Call enable_visualization() first.")
             return
         self.visualizer.set_via_visibility(visible)
-        
+
     def export(self) -> str:
         """Export PCB elements as KiCad s-expressions string.
-        
+
         Returns:
             String containing all KiCad s-expressions
+
         """
         if self.mode != "file":
             print("Warning: Not in file mode. Use set_mode('file') first.")
             return ""
         return "\n".join(self.elements)
-        
-    def visualize(self, visible_layers: Optional[List[int]] = None, show_vias: bool = True, 
-                  width: float = 800, height: float = 600) -> str:
+
+    def visualize(
+        self,
+        visible_layers: Optional[List[int]] = None,
+        show_vias: bool = True,
+        width: float = 800,
+        height: float = 600,
+    ) -> str:
         """Create SVG visualization of the PCB.
-        
+
         Args:
             visible_layers: List of layer indices to show (0=F.Cu, 1=In1.Cu, etc.). If None, show all.
             show_vias: Whether to show vias
             width: SVG canvas width in pixels
             height: SVG canvas height in pixels
-            
+
         Returns:
             SVG string
+
         """
         # If no visualizer exists (rare case when explicitly disabled)
         if not self.visualizer:
             print("Warning: Visualization was disabled. No PCB elements to display.")
             print("To enable visualization:")
-            print("  pcb = PCBdraw(stackup='default_6layer', mode='file', enable_visualization=True)")
+            print(
+                "  pcb = PCBdraw(stackup='default_6layer', mode='file', enable_visualization=True)"
+            )
             print("  # or call pcb.enable_visualization() before drawing")
             return ""
-            
+
         # Apply layer visibility settings
         if visible_layers is not None:
             layer_names = ["F.Cu", "In1.Cu", "In2.Cu", "In3.Cu", "In4.Cu", "B.Cu"]
@@ -738,7 +760,7 @@ class PCBdraw:
                     self.show_layer(layer_names[layer_idx])
         else:
             self.show_all_layers()
-            
+
         self.set_via_visibility(show_vias)
         return self.get_svg()
 

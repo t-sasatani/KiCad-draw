@@ -1,12 +1,9 @@
 """SVG-based visualization for PCB patterns."""
 
 import math
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring
-
-from .config import default_layers
-from .geometry import Point
 
 
 class PCBVisualizer:
@@ -31,6 +28,7 @@ class PCBVisualizer:
         Args:
             width: SVG canvas width in pixels
             height: SVG canvas height in pixels
+
         """
         self.width = width
         self.height = height
@@ -171,7 +169,7 @@ class PCBVisualizer:
         for layer_name in layer_order:
             if layer_name in layers and layer_name in self.visible_layers:
                 layer_group = SubElement(main_group, "g")
-                layer_group.set("class", f'layer-{layer_name.replace(".", "-")}')
+                layer_group.set("class", f"layer-{layer_name.replace('.', '-')}")
 
                 color = self.LAYER_COLORS.get(layer_name, "#888888")
 
@@ -326,31 +324,34 @@ class PCBVisualizer:
         self.elements = []
         self.bounds = None
         self.visible_layers.clear()
-        
+
     def show_layer(self, layer: str) -> None:
         """Make a layer visible.
-        
+
         Args:
             layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+
         """
         self.visible_layers.add(layer)
-        
+
     def hide_layer(self, layer: str) -> None:
         """Hide a layer.
-        
+
         Args:
             layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+
         """
         self.visible_layers.discard(layer)
-        
+
     def toggle_layer(self, layer: str) -> bool:
         """Toggle layer visibility.
-        
+
         Args:
             layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
-            
+
         Returns:
             True if layer is now visible, False if hidden
+
         """
         if layer in self.visible_layers:
             self.visible_layers.discard(layer)
@@ -358,59 +359,64 @@ class PCBVisualizer:
         else:
             self.visible_layers.add(layer)
             return True
-            
+
     def show_all_layers(self) -> None:
         """Show all layers that have elements."""
         for element in self.elements:
             if element["type"] != "via":
                 self.visible_layers.add(element["layer"])
-                
+
     def hide_all_layers(self) -> None:
         """Hide all layers."""
         self.visible_layers.clear()
-        
+
     def show_only_layer(self, layer: str) -> None:
         """Show only the specified layer, hide all others.
-        
+
         Args:
             layer: Layer name to show exclusively
+
         """
         self.visible_layers.clear()
         self.visible_layers.add(layer)
-        
+
     def get_available_layers(self) -> List[str]:
         """Get list of all layers that have elements.
-        
+
         Returns:
             List of layer names that have elements
+
         """
         layers = set()
         for element in self.elements:
             if element["type"] != "via":
                 layers.add(element["layer"])
-        return sorted(list(layers))
-        
+        return sorted(layers)
+
     def get_visible_layers(self) -> List[str]:
         """Get list of currently visible layers.
-        
+
         Returns:
             List of visible layer names
+
         """
-        return sorted(list(self.visible_layers))
-        
+        return sorted(self.visible_layers)
+
     def set_via_visibility(self, visible: bool) -> None:
         """Control via visibility.
-        
+
         Args:
             visible: True to show vias, False to hide them
+
         """
         self.show_vias = visible
-        
+
     def toggle_vias(self) -> bool:
         """Toggle via visibility.
-        
+
         Returns:
             True if vias are now visible, False if hidden
+
         """
         self.show_vias = not self.show_vias
         return self.show_vias

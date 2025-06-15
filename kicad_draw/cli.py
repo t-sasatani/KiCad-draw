@@ -2,7 +2,6 @@
 
 import importlib.metadata
 import sys
-from typing import NoReturn
 
 import click
 

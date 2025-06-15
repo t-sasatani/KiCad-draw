@@ -60,7 +60,6 @@ def test__can_draw_helix_coil(capsys):
     via_size = 0.4
     drill_size = 0.2
     angle_step = 0
-    Nelement = 100
     layerindexlist = [0, 1, 2, 3, 4, 5]
     netnumber = 1  # find from KiCad PCB file
 
@@ -92,7 +91,7 @@ def test__can_draw_helix_coil(capsys):
     for i in range(len(file1_lines)):
         try:
             assert file1_lines[i] == file2_lines[i]
-        except:
+        except AssertionError:
             print("Line " + str(i + 1) + " doesn't match.")
             print("------------------------")
             print("File1: " + file1_lines[i])
