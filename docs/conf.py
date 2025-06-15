@@ -1,3 +1,9 @@
+"""Sphinx documentation configuration for KiCad-draw.
+
+This module configures the Sphinx documentation builder
+for generating API documentation and user guides.
+"""
+
 import os
 import sys
 

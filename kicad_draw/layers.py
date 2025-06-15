@@ -8,7 +8,7 @@ from kicad_draw.config import default_layers
 class LayerManager:
     """Manages PCB layers and stackups."""
 
-    def __init__(self, stackup: Literal[tuple(list(default_layers))]):
+    def __init__(self, stackup: Literal[tuple(default_layers)]):
         """Initialize with a specific stackup."""
         self.layers = default_layers[stackup]["layer_list"]
 

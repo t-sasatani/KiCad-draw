@@ -2,7 +2,7 @@
 
 from typing import List
 
-from kicad_draw.geometry import Line, Point, Via
+from kicad_draw.geometry import Line, Via
 
 
 class KiCadFormatter:
