@@ -796,6 +796,7 @@ class PCBdraw:
         """Parse stored s-expressions and populate visualizer with elements."""
         if not self.visualizer:
             from .visualizer import PCBVisualizer
+
             self.visualizer = PCBVisualizer()
 
         # Clear existing visualization data
@@ -814,9 +815,9 @@ class PCBdraw:
         import re
 
         # Extract coordinates: (start x y) (end x y)
-        start_match = re.search(r'\(start ([\d.-]+) ([\d.-]+)\)', segment_expr)
-        end_match = re.search(r'\(end ([\d.-]+) ([\d.-]+)\)', segment_expr)
-        width_match = re.search(r'\(width ([\d.-]+)\)', segment_expr)
+        start_match = re.search(r"\(start ([\d.-]+) ([\d.-]+)\)", segment_expr)
+        end_match = re.search(r"\(end ([\d.-]+) ([\d.-]+)\)", segment_expr)
+        width_match = re.search(r"\(width ([\d.-]+)\)", segment_expr)
         layer_match = re.search(r'\(layer "([^"]+)"\)', segment_expr)
 
         if start_match and end_match and width_match and layer_match:
@@ -832,8 +833,8 @@ class PCBdraw:
         import re
 
         # Extract coordinates and size: (at x y) (size diameter)
-        at_match = re.search(r'\(at ([\d.-]+) ([\d.-]+)\)', via_expr)
-        size_match = re.search(r'\(size ([\d.-]+)\)', via_expr)
+        at_match = re.search(r"\(at ([\d.-]+) ([\d.-]+)\)", via_expr)
+        size_match = re.search(r"\(size ([\d.-]+)\)", via_expr)
 
         if at_match and size_match:
             x, y = float(at_match.group(1)), float(at_match.group(2))
@@ -870,12 +871,15 @@ class PCBdraw:
                 self._parse_s_expressions_for_visualization()
             else:
                 print("Warning: No PCB elements to visualize.")
-                print("Either draw some elements first, or ensure you're in file mode with elements.")
+                print(
+                    "Either draw some elements first, or ensure you're in file mode with elements."
+                )
                 return ""
 
         # If visualizer exists but has no elements, try to reconstruct
-        elif (not hasattr(self.visualizer, 'lines') or not self.visualizer.lines) and \
-             (not hasattr(self.visualizer, 'vias') or not self.visualizer.vias):
+        elif (not hasattr(self.visualizer, "lines") or not self.visualizer.lines) and (
+            not hasattr(self.visualizer, "vias") or not self.visualizer.vias
+        ):
             if self.mode == "file" and self.elements:
                 self._parse_s_expressions_for_visualization()
 

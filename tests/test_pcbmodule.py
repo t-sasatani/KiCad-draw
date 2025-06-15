@@ -136,7 +136,15 @@ def test_visualize_exported_instance():
 
     # Draw some elements
     pcb.drawline(x1=0, y1=0, x2=10, y2=10, line_width=0.5, net_number=1, layer_index=0)
-    pcb.draw_via(x=5, y=5, via_size=0.8, drill_size=0.4, layer_index_1=0, layer_index_2=1, net_number=1)
+    pcb.draw_via(
+        x=5,
+        y=5,
+        via_size=0.8,
+        drill_size=0.4,
+        layer_index_1=0,
+        layer_index_2=1,
+        net_number=1,
+    )
 
     # Export to s-expressions
     s_expressions = pcb.export()
