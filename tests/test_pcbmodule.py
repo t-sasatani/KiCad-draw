@@ -121,6 +121,32 @@ def test_draw_helix_rectangle(pcb_4layer, capsys):
     assert "(via (at" in captured.out
 
 
+def test_draw_helix_rectangle_with_ports(pcb_4layer, capsys):
+    """Test drawing a helix rectangle with ports."""
+    params = HelixRectangleParams(
+        x0=100.0,
+        y0=100.0,
+        width=50.0,
+        height=30.0,
+        corner_radius=5.0,
+        layer_index_list=[0, 1, 2],
+        track_width=0.4,
+        connect_width=0.3,
+        drill_size=0.2,
+        via_size=0.4,
+        net_number=1,
+        port_gap=2.0,
+        tab_gap=3.0,
+    )
+    pcb_4layer.draw_helix_rectangle(params)
+    captured = capsys.readouterr()
+    assert "(segment (start" in captured.out
+    assert "(via (at" in captured.out
+    # Should have more segments due to port gaps and tabs
+    segment_count = captured.out.count("(segment")
+    assert segment_count > 20  # Should have many segments for the complex shape
+
+
 def test_mode_switch(pcb_4layer):
     """Test switching between print and file modes."""
     # Start in print mode

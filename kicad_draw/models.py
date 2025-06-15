@@ -16,3 +16,5 @@ class HelixRectangleParams(BaseModel):
     via_size: float
     net_number: int
     segment_number: int = 100
+    port_gap: float = 0.0  # Gap size for ports (0 means no ports)
+    tab_gap: float = 0.0  # Extension distance for connection tabs
