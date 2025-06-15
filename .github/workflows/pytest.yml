@@ -31,13 +31,13 @@ jobs:
           verbose: false
           job-summary: true
       - name: save helix out file
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: helix out
           path: ./tests/test_output/helix_coil_out.txt
       - name: save helix asset file
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: helix out
