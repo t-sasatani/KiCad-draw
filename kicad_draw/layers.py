@@ -30,4 +30,4 @@ class LayerManager:
         """Get layer names by indices."""
         if not self.validate_layers(indices):
             raise ValueError(f"Invalid layer indices: {indices}")
-        return [self.layers[index] for index in indices] 
+        return [self.layers[index] for index in indices]

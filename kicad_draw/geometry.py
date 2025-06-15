@@ -9,6 +9,7 @@ import numpy as np
 @dataclass
 class Point:
     """A point in 2D space."""
+
     x: float
     y: float
 
@@ -33,6 +34,7 @@ class Point:
 @dataclass
 class Line:
     """A line segment defined by two points."""
+
     start: Point
     end: Point
     width: float
@@ -45,6 +47,7 @@ class Line:
 @dataclass
 class Arc:
     """An arc defined by center, radius, and angles."""
+
     center: Point
     radius: float
     start_angle: float
@@ -66,6 +69,7 @@ class Arc:
 @dataclass
 class Via:
     """A via defined by position and dimensions."""
+
     position: Point
     size: float
-    drill_size: float 
+    drill_size: float

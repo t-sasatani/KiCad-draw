@@ -94,17 +94,15 @@ def test_draw_helix(pcb_4layer, capsys):
     assert any("(via" in line for line in lines)
 
 
-def test_invalid_layer_index(pcb_4layer, capsys):
+def test_invalid_layer_index(pcb_4layer):
     """Test drawing with invalid layer index."""
-    # Test drawing with invalid layer index
-    pcb_4layer.drawline(
-        x1=100.0,
-        y1=100.0,
-        x2=200.0,
-        y2=100.0,
-        line_width=0.4,
-        net_number=1,
-        layer_index=10,  # Invalid layer index
-    )
-    captured = capsys.readouterr()
-    assert "layer_index exceeds layer_list" in captured.out
+    with pytest.raises(ValueError, match="Invalid layer index: 10"):
+        pcb_4layer.drawline(
+            x1=100.0,
+            y1=100.0,
+            x2=200.0,
+            y2=100.0,
+            line_width=0.4,
+            net_number=1,
+            layer_index=10,  # Invalid layer index
+        )
