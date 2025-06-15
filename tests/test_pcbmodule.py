@@ -129,6 +129,33 @@ def test_draw_helix_with_params(pcb_4layer_file):
     assert len(vias) > 0
 
 
+def test_visualize_exported_instance():
+    """Test visualizing a PCB instance after export (reconstruction from s-expressions)."""
+    # Create PCB without visualization initially enabled
+    pcb = PCBdraw("default_4layer", mode="file", enable_visualization=False)
+
+    # Draw some elements
+    pcb.drawline(x1=0, y1=0, x2=10, y2=10, line_width=0.5, net_number=1, layer_index=0)
+    pcb.draw_via(x=5, y=5, via_size=0.8, drill_size=0.4, layer_index_1=0, layer_index_2=1, net_number=1)
+
+    # Export to s-expressions
+    s_expressions = pcb.export()
+    assert len(s_expressions) > 0
+    assert len(pcb.elements) == 2
+
+    # Now visualize the exported instance - should reconstruct from s-expressions
+    svg_content = pcb.visualize(visible_layers=[0, 1], show_vias=True)
+
+    # Should generate valid SVG content
+    assert len(svg_content) > 0
+    assert "<svg" in svg_content
+    assert "</svg>" in svg_content
+
+    # Should contain visual elements
+    assert "line" in svg_content or "path" in svg_content  # Lines/traces
+    assert "circle" in svg_content  # Vias
+
+
 def test_invalid_layer_index(pcb_4layer_file):
     """Test that invalid layer index raises appropriate error."""
     with pytest.raises(ValueError, match="Invalid layer index: 10"):

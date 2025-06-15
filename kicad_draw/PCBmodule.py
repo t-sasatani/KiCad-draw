@@ -792,6 +792,55 @@ class PCBdraw:
             return ""
         return "\n".join(self.elements)
 
+    def _parse_s_expressions_for_visualization(self) -> None:
+        """Parse stored s-expressions and populate visualizer with elements."""
+        if not self.visualizer:
+            from .visualizer import PCBVisualizer
+            self.visualizer = PCBVisualizer()
+
+        # Clear existing visualization data
+        self.visualizer.lines = []
+        self.visualizer.vias = []
+
+        # Parse each s-expression element
+        for element in self.elements:
+            if element.startswith("(segment"):
+                self._parse_segment_for_visualization(element)
+            elif element.startswith("(via"):
+                self._parse_via_for_visualization(element)
+
+    def _parse_segment_for_visualization(self, segment_expr: str) -> None:
+        """Parse a segment s-expression and add to visualizer."""
+        import re
+
+        # Extract coordinates: (start x y) (end x y)
+        start_match = re.search(r'\(start ([\d.-]+) ([\d.-]+)\)', segment_expr)
+        end_match = re.search(r'\(end ([\d.-]+) ([\d.-]+)\)', segment_expr)
+        width_match = re.search(r'\(width ([\d.-]+)\)', segment_expr)
+        layer_match = re.search(r'\(layer "([^"]+)"\)', segment_expr)
+
+        if start_match and end_match and width_match and layer_match:
+            x1, y1 = float(start_match.group(1)), float(start_match.group(2))
+            x2, y2 = float(end_match.group(1)), float(end_match.group(2))
+            width = float(width_match.group(1))
+            layer = layer_match.group(1)
+
+            self.visualizer.add_line(x1, y1, x2, y2, width, layer)
+
+    def _parse_via_for_visualization(self, via_expr: str) -> None:
+        """Parse a via s-expression and add to visualizer."""
+        import re
+
+        # Extract coordinates and size: (at x y) (size diameter)
+        at_match = re.search(r'\(at ([\d.-]+) ([\d.-]+)\)', via_expr)
+        size_match = re.search(r'\(size ([\d.-]+)\)', via_expr)
+
+        if at_match and size_match:
+            x, y = float(at_match.group(1)), float(at_match.group(2))
+            size = float(size_match.group(1))
+
+            self.visualizer.add_via(x, y, size)
+
     def visualize(
         self,
         visible_layers: Optional[List[int]] = None,
@@ -800,6 +849,9 @@ class PCBdraw:
         height: float = 600,
     ) -> str:
         """Create SVG visualization of the PCB.
+
+        This method can visualize PCB elements whether they were captured during drawing
+        or need to be reconstructed from exported s-expressions.
 
         Args:
             visible_layers: List of layer indices to show (0=F.Cu, 1=In1.Cu, etc.). If None, show all.
@@ -811,15 +863,21 @@ class PCBdraw:
             SVG string
 
         """
-        # If no visualizer exists (rare case when explicitly disabled)
+        # If no visualizer exists, try to reconstruct from s-expressions
         if not self.visualizer:
-            print("Warning: Visualization was disabled. No PCB elements to display.")
-            print("To enable visualization:")
-            print(
-                "  pcb = PCBdraw(stackup='default_6layer', mode='file', enable_visualization=True)"
-            )
-            print("  # or call pcb.enable_visualization() before drawing")
-            return ""
+            if self.mode == "file" and self.elements:
+                # Reconstruct visualization from exported s-expressions
+                self._parse_s_expressions_for_visualization()
+            else:
+                print("Warning: No PCB elements to visualize.")
+                print("Either draw some elements first, or ensure you're in file mode with elements.")
+                return ""
+
+        # If visualizer exists but has no elements, try to reconstruct
+        elif (not hasattr(self.visualizer, 'lines') or not self.visualizer.lines) and \
+             (not hasattr(self.visualizer, 'vias') or not self.visualizer.vias):
+            if self.mode == "file" and self.elements:
+                self._parse_s_expressions_for_visualization()
 
         # Apply layer visibility settings
         if visible_layers is not None:
