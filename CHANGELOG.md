@@ -5,7 +5,7 @@ All notable changes to KiCad-draw will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.1] - 2024-12-20
+## [0.4.1] - 2025-06-15
 
 ### Added
 - Automated PyPI publishing workflow using GitHub Actions
@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integrated with PyPI Trusted Publishers for secure publishing
 - Automated package building and distribution process
 
-## [0.4.0] - 2024-12-20
+## [0.4.0] - 2025-06-15
 
 ### Added
 - Comprehensive Sphinx documentation with SVG visualizations
