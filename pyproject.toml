@@ -40,7 +40,11 @@ viz = [
 ]
 
 [dependency-groups]
-dev = ["ipykernel>=6.29.5,<7"]
+dev = [
+    "hatch-vcs>=0.5.0",
+    "hatchling>=1.27.0",
+    "ipykernel>=6.29.5,<7",
+]
 
 [build-system]
 requires = ["hatchling", "hatch-vcs"]
@@ -95,4 +99,4 @@ packages = ["kicad_draw"]
 
 [tool.hatch.version]
 source = "vcs"
-raw-options = { version_scheme = "post-release", tag_regex = "^v(?P<version>[0-9]+\\.[2-9]+.*|[1-9]+\\..*)$" }
+raw-options = { local_scheme = "no-local-version", tag_regex = "^v(?P<version>[0-9]+\\.[2-9]+.*|[1-9]+\\..*)$" }
