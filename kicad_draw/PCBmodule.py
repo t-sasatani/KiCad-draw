@@ -1,22 +1,22 @@
-from typing import Literal
+"""Module for generating traces for KiCad PCB."""
+
+from typing import List, Literal
 
 import numpy as np
 
 from kicad_draw.config import default_layers
+from kicad_draw.formatter import KiCadFormatter
+from kicad_draw.geometry import Arc, Line, Point, Via
+from kicad_draw.layers import LayerManager
 
 
 class PCBdraw:
-    """Module for generating traces for KiCad PCB.
+    """Module for generating traces for KiCad PCB."""
 
-    Args:
-        layer_list (Literal["default_4layer", "default_6layer"]): layer stackup of the board.
-
-    """
-
-    # def __init__(self, Nlayer, net_number, track_width = 0.2, connect_width = 0.15, Nelement = 100, via_size = 0.3, drill_size = 0.15):
     def __init__(self, stackup: Literal[tuple(list(default_layers))]):
         """Initialize the PCBdraw class with the specified stackup."""
-        self.layer_list = default_layers[stackup]["layer_list"]
+        self.layer_manager = LayerManager(stackup)
+        self.formatter = KiCadFormatter()
 
     def drawline(
         self,
@@ -29,31 +29,13 @@ class PCBdraw:
         layer_index: int,
     ) -> None:
         """Draw linear conductive trace."""
-        try:
-            assert layer_index < len(self.layer_list)
-        except AssertionError as e:
-            print(f"layer_index exceeds layer_list: {e}")
-            return
-
-        layer_name = self.layer_list[layer_index]
-
-        print(
-            "(segment (start "
-            + str(x1)
-            + " "
-            + str(y1)
-            + ") (end "
-            + str(x2)
-            + " "
-            + str(y2)
-            + ") (width "
-            + str(line_width)
-            + ') (layer "'
-            + layer_name
-            + '") (net '
-            + str(net_number)
-            + ") (tstamp 0))"
+        line = Line(
+            start=Point(x1, y1),
+            end=Point(x2, y2),
+            width=line_width,
         )
+        layer = self.layer_manager.get_layer_name(layer_index)
+        print(self.formatter.format_segment(line, layer, net_number))
 
     def draw_polyline_arc(
         self,
@@ -68,21 +50,25 @@ class PCBdraw:
         segment_number: int = 100,
     ) -> None:
         """Draw arc-shaped conductive trace."""
-        delta_angle = (2 * np.pi - port_angle) / segment_number
-        for i in range(segment_number):
-            x1 = x0 + radius * np.cos(port_angle / 2 + i * delta_angle + angle_offset)
-            x2 = x0 + radius * np.cos(
-                port_angle / 2 + (i + 1) * delta_angle + angle_offset
-            )
-            y1 = y0 + radius * np.sin(port_angle / 2 + i * delta_angle + angle_offset)
-            y2 = y0 + radius * np.sin(
-                port_angle / 2 + (i + 1) * delta_angle + angle_offset
-            )
+        center = Point(x0, y0)
+        start_angle = port_angle / 2 + angle_offset
+        end_angle = 2 * np.pi - port_angle / 2 + angle_offset
+
+        arc = Arc(
+            center=center,
+            radius=radius,
+            start_angle=start_angle,
+            end_angle=end_angle,
+            width=line_width,
+        )
+
+        points = arc.to_points(segment_number)
+        for i in range(len(points) - 1):
             self.drawline(
-                x1=x1,
-                y1=y1,
-                x2=x2,
-                y2=y2,
+                x1=points[i].x,
+                y1=points[i].y,
+                x2=points[i + 1].x,
+                y2=points[i + 1].y,
                 line_width=line_width,
                 layer_index=layer_index,
                 net_number=net_number,
@@ -99,31 +85,13 @@ class PCBdraw:
         layer_index_2: int,
     ) -> None:
         """Draw via."""
-        try:
-            assert layer_index_1 < len(self.layer_list)
-            assert layer_index_2 < len(self.layer_list)
-        except AssertionError as e:
-            print(f"layer_index_i exceeds layer_list: {e}")
-
-        layer_names = [self.layer_list[layer_index_1], self.layer_list[layer_index_2]]
-
-        print(
-            "(via (at "
-            + str(x)
-            + " "
-            + str(y)
-            + ") (size "
-            + str(via_size)
-            + ") (drill "
-            + str(drill_size)
-            + ') (layers "'
-            + layer_names[0]
-            + '" "'
-            + layer_names[1]
-            + '") (net '
-            + str(net_number)
-            + ") (tstamp 0))"
+        via = Via(
+            position=Point(x, y),
+            size=via_size,
+            drill_size=drill_size,
         )
+        layers = self.layer_manager.get_layer_names([layer_index_1, layer_index_2])
+        print(self.formatter.format_via(via, layers, net_number))
 
     def draw_helix(
         self,
@@ -133,7 +101,7 @@ class PCBdraw:
         port_gap: float,
         tab_gap: float,
         angle_step: float,
-        layer_index_list: list,
+        layer_index_list: List[int],
         track_width: float,
         connect_width: float,
         drill_size: float,
