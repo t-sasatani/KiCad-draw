@@ -582,6 +582,98 @@ class PCBdraw:
             print("SVG content (save to .svg file to view):")
             print(svg_content)
 
+    def show_layer(self, layer: str) -> None:
+        """Show a specific layer in visualization.
+
+        Args:
+            layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.show_layer(layer)
+
+    def hide_layer(self, layer: str) -> None:
+        """Hide a specific layer in visualization.
+
+        Args:
+            layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.hide_layer(layer)
+
+    def toggle_layer(self, layer: str) -> bool:
+        """Toggle layer visibility in visualization.
+
+        Args:
+            layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+
+        Returns:
+            True if layer is now visible, False if hidden
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return False
+        return self.visualizer.toggle_layer(layer)
+
+    def show_only_layer(self, layer: str) -> None:
+        """Show only the specified layer, hide all others.
+
+        Args:
+            layer: Layer name to show exclusively
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.show_only_layer(layer)
+
+    def show_all_layers(self) -> None:
+        """Show all layers in visualization."""
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.show_all_layers()
+
+    def hide_all_layers(self) -> None:
+        """Hide all layers in visualization."""
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.hide_all_layers()
+
+    def toggle_vias(self) -> bool:
+        """Toggle via visibility in visualization.
+
+        Returns:
+            True if vias are now visible, False if hidden
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return False
+        return self.visualizer.toggle_vias()
+
+    def get_available_layers(self) -> List[str]:
+        """Get list of all layers that have elements.
+
+        Returns:
+            List of layer names, or empty list if visualization not enabled
+        """
+        if not self.visualizer:
+            return []
+        return self.visualizer.get_available_layers()
+
+    def get_visible_layers(self) -> List[str]:
+        """Get list of currently visible layers.
+
+        Returns:
+            List of visible layer names, or empty list if visualization not enabled
+        """
+        if not self.visualizer:
+            return []
+        return self.visualizer.get_visible_layers()
+
     """
     def drawspiral_2layer(self, x0, y0, rstart, rend, Nturns, Portgap, Nelement, layer_index1, layer_index2, TrackWidth, Connectwidth, net_number):
         r_inc = (rend - rstart)/(Nturns-1)

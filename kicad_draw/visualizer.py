@@ -36,6 +36,8 @@ class PCBVisualizer:
         self.height = height
         self.elements = []
         self.bounds = None  # Will be calculated from elements
+        self.visible_layers = set()  # Track which layers are visible
+        self.show_vias = True  # Control via visibility
 
     def add_line(
         self, x1: float, y1: float, x2: float, y2: float, width: float, layer: str
@@ -52,6 +54,8 @@ class PCBVisualizer:
                 "layer": layer,
             }
         )
+        # Auto-enable layer visibility when first element is added
+        self.visible_layers.add(layer)
         self._update_bounds(x1, y1)
         self._update_bounds(x2, y2)
 
@@ -162,10 +166,10 @@ class PCBVisualizer:
                     layers[layer] = []
                 layers[layer].append(element)
 
-        # Render layers (bottom to top)
+        # Render layers (bottom to top) - only visible layers
         layer_order = ["B.Cu", "In4.Cu", "In3.Cu", "In2.Cu", "In1.Cu", "F.Cu"]
         for layer_name in layer_order:
-            if layer_name in layers:
+            if layer_name in layers and layer_name in self.visible_layers:
                 layer_group = SubElement(main_group, "g")
                 layer_group.set("class", f'layer-{layer_name.replace(".", "-")}')
 
@@ -182,8 +186,8 @@ class PCBVisualizer:
                         line.set("stroke-width", str(element["width"]))
                         line.set("stroke-linecap", "round")
 
-        # Render vias on top
-        if vias:
+        # Render vias on top (if enabled)
+        if vias and self.show_vias:
             via_group = SubElement(main_group, "g")
             via_group.set("class", "vias")
 
@@ -196,7 +200,7 @@ class PCBVisualizer:
                 circle.set("stroke", "#666666")
                 circle.set("stroke-width", "0.1")
 
-        # Add legend
+        # Add legend (show all layers with visibility indicators)
         self._add_legend(svg, layers.keys())
 
         # Convert to string with pretty formatting
@@ -215,11 +219,11 @@ class PCBVisualizer:
         legend_x = 20
         legend_y = 30
 
-        # Legend background
+        # Legend background (wider to accommodate visibility indicators)
         legend_bg = SubElement(legend_group, "rect")
         legend_bg.set("x", str(legend_x - 10))
         legend_bg.set("y", str(legend_y - 20))
-        legend_bg.set("width", str(120))
+        legend_bg.set("width", str(140))
         legend_bg.set("height", str(len(used_layers) * 25 + 30))
         legend_bg.set("fill", "rgba(0,0,0,0.8)")
         legend_bg.set("stroke", "#666")
@@ -235,23 +239,51 @@ class PCBVisualizer:
         title.set("font-weight", "bold")
         title.text = "Layers"
 
-        # Layer entries
+        # Layer entries with visibility indicators
         for i, layer in enumerate(sorted(used_layers)):
             y_pos = legend_y + 25 + i * 20
+            is_visible = layer in self.visible_layers
 
-            # Color swatch
+            # Color swatch (dimmed if hidden)
             swatch = SubElement(legend_group, "rect")
             swatch.set("x", str(legend_x))
             swatch.set("y", str(y_pos - 8))
             swatch.set("width", "16")
             swatch.set("height", "12")
-            swatch.set("fill", self.LAYER_COLORS.get(layer, "#888888"))
+            color = self.LAYER_COLORS.get(layer, "#888888")
+            if not is_visible:
+                # Dim the color for hidden layers
+                swatch.set("fill", color)
+                swatch.set("opacity", "0.3")
+            else:
+                swatch.set("fill", color)
 
-            # Layer name
+            # Visibility indicator (eye icon)
+            eye_x = legend_x + 20
+            if is_visible:
+                # Open eye (visible)
+                eye = SubElement(legend_group, "text")
+                eye.set("x", str(eye_x))
+                eye.set("y", str(y_pos))
+                eye.set("fill", "#00FF00")
+                eye.set("font-family", "Arial, sans-serif")
+                eye.set("font-size", "10")
+                eye.text = "👁"
+            else:
+                # Closed eye (hidden)
+                eye = SubElement(legend_group, "text")
+                eye.set("x", str(eye_x))
+                eye.set("y", str(y_pos))
+                eye.set("fill", "#FF0000")
+                eye.set("font-family", "Arial, sans-serif")
+                eye.set("font-size", "10")
+                eye.text = "🚫"
+
+            # Layer name (dimmed if hidden)
             text = SubElement(legend_group, "text")
-            text.set("x", str(legend_x + 25))
+            text.set("x", str(legend_x + 35))
             text.set("y", str(y_pos))
-            text.set("fill", "white")
+            text.set("fill", "white" if is_visible else "#666666")
             text.set("font-family", "Arial, sans-serif")
             text.set("font-size", "12")
             text.text = layer
@@ -293,3 +325,92 @@ class PCBVisualizer:
         """Clear all elements."""
         self.elements = []
         self.bounds = None
+        self.visible_layers.clear()
+        
+    def show_layer(self, layer: str) -> None:
+        """Make a layer visible.
+        
+        Args:
+            layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+        """
+        self.visible_layers.add(layer)
+        
+    def hide_layer(self, layer: str) -> None:
+        """Hide a layer.
+        
+        Args:
+            layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+        """
+        self.visible_layers.discard(layer)
+        
+    def toggle_layer(self, layer: str) -> bool:
+        """Toggle layer visibility.
+        
+        Args:
+            layer: Layer name (e.g., "F.Cu", "In1.Cu", "B.Cu")
+            
+        Returns:
+            True if layer is now visible, False if hidden
+        """
+        if layer in self.visible_layers:
+            self.visible_layers.discard(layer)
+            return False
+        else:
+            self.visible_layers.add(layer)
+            return True
+            
+    def show_all_layers(self) -> None:
+        """Show all layers that have elements."""
+        for element in self.elements:
+            if element["type"] != "via":
+                self.visible_layers.add(element["layer"])
+                
+    def hide_all_layers(self) -> None:
+        """Hide all layers."""
+        self.visible_layers.clear()
+        
+    def show_only_layer(self, layer: str) -> None:
+        """Show only the specified layer, hide all others.
+        
+        Args:
+            layer: Layer name to show exclusively
+        """
+        self.visible_layers.clear()
+        self.visible_layers.add(layer)
+        
+    def get_available_layers(self) -> List[str]:
+        """Get list of all layers that have elements.
+        
+        Returns:
+            List of layer names that have elements
+        """
+        layers = set()
+        for element in self.elements:
+            if element["type"] != "via":
+                layers.add(element["layer"])
+        return sorted(list(layers))
+        
+    def get_visible_layers(self) -> List[str]:
+        """Get list of currently visible layers.
+        
+        Returns:
+            List of visible layer names
+        """
+        return sorted(list(self.visible_layers))
+        
+    def set_via_visibility(self, visible: bool) -> None:
+        """Control via visibility.
+        
+        Args:
+            visible: True to show vias, False to hide them
+        """
+        self.show_vias = visible
+        
+    def toggle_vias(self) -> bool:
+        """Toggle via visibility.
+        
+        Returns:
+            True if vias are now visible, False if hidden
+        """
+        self.show_vias = not self.show_vias
+        return self.show_vias
