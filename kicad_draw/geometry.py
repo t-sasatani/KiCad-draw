@@ -14,9 +14,11 @@ class Point:
     y: float
 
     def __add__(self, other: "Point") -> "Point":
+        """Add two points together (vector addition)."""
         return Point(self.x + other.x, self.y + other.y)
 
     def __sub__(self, other: "Point") -> "Point":
+        """Subtract one point from another (vector subtraction)."""
         return Point(self.x - other.x, self.y - other.y)
 
     def rotate(self, angle: float, center: "Point") -> "Point":

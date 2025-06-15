@@ -1,3 +1,9 @@
+"""Tests for legacy PCBdraw functionality.
+
+This module contains tests for the original PCBdraw class
+to ensure backward compatibility and core functionality.
+"""
+
 import os
 import sys
 

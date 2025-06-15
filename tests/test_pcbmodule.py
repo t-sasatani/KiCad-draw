@@ -1,3 +1,9 @@
+"""Tests for the modern PCBmodule functionality.
+
+This module contains comprehensive tests for the refactored PCBdraw class
+including new features like visualization and parameter models.
+"""
+
 import pytest
 
 from kicad_draw.models import HelixRectangleParams
@@ -12,6 +18,7 @@ def pcb_4layer():
 
 @pytest.fixture
 def pcb_4layer_file():
+    """Create a PCBdraw instance with 4-layer stackup in file mode for testing."""
     return PCBdraw("default_4layer", mode="file")
 
 
