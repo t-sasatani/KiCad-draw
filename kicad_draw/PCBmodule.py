@@ -8,7 +8,7 @@ from kicad_draw.config import default_layers
 from kicad_draw.formatter import KiCadFormatter
 from kicad_draw.geometry import Arc, Line, Point, Via
 from kicad_draw.layers import LayerManager
-from kicad_draw.models import HelixRectangleParams
+from kicad_draw.models import HelixParams, HelixRectangleParams
 from kicad_draw.visualizer import PCBVisualizer
 
 # Constants for geometric calculations
@@ -160,64 +160,134 @@ class PCBdraw:
 
     def draw_helix(
         self,
-        x0: float,
-        y0: float,
-        radius: float,
-        port_gap: float,
-        tab_gap: float,
-        angle_step: float,
-        layer_index_list: List[int],
-        track_width: float,
-        connect_width: float,
-        drill_size: float,
-        via_size: float,
-        net_number: int,
+        params: HelixParams = None,
+        # Legacy parameters for backward compatibility
+        x0: float = None,
+        y0: float = None,
+        radius: float = None,
+        port_gap: float = None,
+        tab_gap: float = None,
+        angle_step: float = None,
+        layer_index_list: List[int] = None,
+        track_width: float = None,
+        connect_width: float = None,
+        drill_size: float = None,
+        via_size: float = None,
+        net_number: int = None,
         tab_position: Literal["IN", "OUT"] = "OUT",
         base_angle_offset: float = 0,
         segment_number: int = 100,
     ) -> None:
-        """Draw helix coil pattern."""
-        # angle of the port openings
-        port_angle = np.arcsin(port_gap / HALF_DIVISOR / radius) * DOUBLE_MULTIPLIER
+        """Draw helix coil pattern.
 
-        # draw coil patterns
-        for turn in range(len(layer_index_list)):
-            turn_angle_offset = (
-                (port_angle + angle_step) * turn
-                + base_angle_offset
-                - (port_angle + angle_step) * (len(layer_index_list) - 1) / HALF_DIVISOR
-            )
-            self.draw_polyline_arc(
+        Args:
+            params: HelixParams object containing all parameters (preferred method)
+
+            # Legacy parameters (for backward compatibility):
+            x0: X-coordinate of the helix center (mm)
+            y0: Y-coordinate of the helix center (mm)
+            radius: Radius of the circular helix (mm)
+            port_gap: Gap size for ports (mm)
+            tab_gap: Extension distance for connection tabs (mm)
+            angle_step: Angular step between layers (radians)
+            layer_index_list: List of layer indices for the helix
+            track_width: Width of the main coil traces (mm)
+            connect_width: Width of the connection traces between layers (mm)
+            drill_size: Diameter of via drill holes (mm)
+            via_size: Outer diameter of vias (mm)
+            net_number: KiCad net number for electrical connectivity
+            tab_position: Position of connection tabs ("IN" or "OUT")
+            base_angle_offset: Base angular offset for the entire helix (radians)
+            segment_number: Number of segments for curved sections
+
+        """
+        # Handle both new params-based interface and legacy individual parameters
+        if params is not None:
+            # Use the new HelixParams object
+            p = params
+        else:
+            # Create HelixParams from legacy parameters for backward compatibility
+            if any(
+                param is None
+                for param in [
+                    x0,
+                    y0,
+                    radius,
+                    port_gap,
+                    tab_gap,
+                    angle_step,
+                    layer_index_list,
+                    track_width,
+                    connect_width,
+                    drill_size,
+                    via_size,
+                    net_number,
+                ]
+            ):
+                raise ValueError(
+                    "When not using params object, all legacy parameters must be provided"
+                )
+
+            p = HelixParams(
                 x0=x0,
                 y0=y0,
                 radius=radius,
-                port_angle=port_angle,
-                line_width=track_width,
-                layer_index=layer_index_list[turn],
+                port_gap=port_gap,
+                tab_gap=tab_gap,
+                angle_step=angle_step,
+                layer_index_list=layer_index_list,
+                track_width=track_width,
+                connect_width=connect_width,
+                drill_size=drill_size,
+                via_size=via_size,
                 net_number=net_number,
-                angle_offset=turn_angle_offset,
+                tab_position=tab_position,
+                base_angle_offset=base_angle_offset,
                 segment_number=segment_number,
+            )
+        # angle of the port openings
+        port_angle = np.arcsin(p.port_gap / HALF_DIVISOR / p.radius) * DOUBLE_MULTIPLIER
+
+        # draw coil patterns
+        for turn in range(len(p.layer_index_list)):
+            turn_angle_offset = (
+                (port_angle + p.angle_step) * turn
+                + p.base_angle_offset
+                - (port_angle + p.angle_step)
+                * (len(p.layer_index_list) - 1)
+                / HALF_DIVISOR
+            )
+            self.draw_polyline_arc(
+                x0=p.x0,
+                y0=p.y0,
+                radius=p.radius,
+                port_angle=port_angle,
+                line_width=p.track_width,
+                layer_index=p.layer_index_list[turn],
+                net_number=p.net_number,
+                angle_offset=turn_angle_offset,
+                segment_number=p.segment_number,
             )
 
             port_angle_top = turn_angle_offset + port_angle / HALF_DIVISOR
             port_angle_bottom = turn_angle_offset - port_angle / HALF_DIVISOR
 
-            x1_top = x0 + radius * np.cos(port_angle_top)
-            y1_top = y0 + radius * np.sin(port_angle_top)
-            x2_top = x0 + (radius + tab_gap) * np.cos(
-                port_angle_top + angle_step / HALF_DIVISOR
+            x1_top = p.x0 + p.radius * np.cos(port_angle_top)
+            y1_top = p.y0 + p.radius * np.sin(port_angle_top)
+            x2_top = p.x0 + (p.radius + p.tab_gap) * np.cos(
+                port_angle_top + p.angle_step / HALF_DIVISOR
             )
-            y2_top = y0 + (radius + tab_gap) * np.sin(
-                port_angle_top + angle_step / HALF_DIVISOR
+            y2_top = p.y0 + (p.radius + p.tab_gap) * np.sin(
+                port_angle_top + p.angle_step / HALF_DIVISOR
             )
 
-            x1_bottom = x0 + radius * np.cos(port_angle_bottom)
-            y1_bottom = y0 + radius * np.sin(port_angle_bottom)
-            x2_bottom = x0 + (radius + tab_gap) * np.cos(
-                port_angle_bottom - angle_step / HALF_DIVISOR
+            x1_bottom = p.x0 + p.radius * np.cos(port_angle_bottom)
+            y1_bottom = p.y0 + p.radius * np.sin(port_angle_bottom)
+            x2_bottom = p.x0 + (p.radius + p.tab_gap) * np.cos(
+                port_angle_bottom - p.angle_step / HALF_DIVISOR
             )
-            y2_bottom = y0 + (radius + tab_gap) * np.sin(
-                port_angle_bottom - angle_step / HALF_DIVISOR
+            y2_bottom = p.y0 + (p.radius + p.tab_gap) * np.sin(
+                port_angle_bottom - p.angle_step / HALF_DIVISOR
             )
 
             if turn != 0:
@@ -226,28 +296,28 @@ class PCBdraw:
                     y1=y1_bottom,
                     x2=x2_bottom,
                     y2=y2_bottom,
-                    line_width=connect_width,
-                    layer_index=layer_index_list[turn],
-                    net_number=net_number,
+                    line_width=p.connect_width,
+                    layer_index=p.layer_index_list[turn],
+                    net_number=p.net_number,
                 )
-            if turn != len(layer_index_list) - 1:
+            if turn != len(p.layer_index_list) - 1:
                 self.drawline(
                     x1=x1_top,
                     y1=y1_top,
                     x2=x2_top,
                     y2=y2_top,
-                    line_width=connect_width,
-                    layer_index=layer_index_list[turn],
-                    net_number=net_number,
+                    line_width=p.connect_width,
+                    layer_index=p.layer_index_list[turn],
+                    net_number=p.net_number,
                 )
                 self.draw_via(
                     x=x2_top,
                     y=y2_top,
-                    drill_size=drill_size,
-                    via_size=via_size,
-                    layer_index_1=layer_index_list[turn],
-                    layer_index_2=layer_index_list[turn + 1],
-                    net_number=net_number,
+                    drill_size=p.drill_size,
+                    via_size=p.via_size,
+                    layer_index_1=p.layer_index_list[turn],
+                    layer_index_2=p.layer_index_list[turn + 1],
+                    net_number=p.net_number,
                 )
 
     def draw_helix_rectangle(
