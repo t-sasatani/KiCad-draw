@@ -1,9 +1,9 @@
 [project]
 name = "kicad-draw"
-dynamic = ["version"]
+version = "0.4.8"
 description = "Python module for generating traces for KiCad PCB."
 authors = [{ name = "t-sasatani", email = "sasatani.dev@gmail.com" }]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10,<4.0"
 readme = "README.md"
 dependencies = [
     "numpy>=1.25.2,<2",
@@ -43,7 +43,7 @@ viz = [
 dev = ["ipykernel>=6.29.5,<7"]
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.black]
@@ -93,6 +93,7 @@ filterwarnings = [
 [tool.hatch.build.targets.wheel]
 packages = ["kicad_draw"]
 
-[tool.hatch.version]
-source = "vcs"
-raw-options = { version_scheme = "post-release" }
+# Temporarily disable VCS versioning to avoid git history issues
+# [tool.hatch.version]
+# source = "vcs"
+# raw-options = { version_scheme = "post-release" }
