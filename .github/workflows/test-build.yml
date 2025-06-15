@@ -1,0 +1,40 @@
+name: Test Package Build
+
+on:
+  workflow_dispatch:  # Manual trigger only
+  push:
+    branches: [ test-build ]  # Or push to test branch
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+    
+    - name: Install build dependencies
+      run: |
+        uv sync
+        uv pip install build
+    
+    - name: Build package
+      run: uv run python -m build
+    
+    - name: Check build artifacts
+      run: |
+        ls -la dist/
+        echo "✅ Build successful!"
+    
+    - name: Upload build artifacts (for inspection)
+      uses: actions/upload-artifact@v3
+      with:
+        name: package-artifacts
+        path: dist/ 
