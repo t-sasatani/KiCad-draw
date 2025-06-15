@@ -1,7 +1,7 @@
 """SVG-based visualization for PCB patterns."""
 
 import math
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring
 
@@ -131,7 +131,7 @@ class PCBVisualizer:
 
         return scale, translate_x, translate_y
 
-    def generate_svg(self) -> str:
+    def generate_svg(self, layer_order: Optional[List[str]] = None) -> str:
         """Generate SVG string."""
         if not self.elements:
             return self._empty_svg()
@@ -171,8 +171,8 @@ class PCBVisualizer:
                 layers[layer].append(element)
 
         # Render layers (bottom to top) - only visible layers
-        layer_order = ["B.Cu", "In4.Cu", "In3.Cu", "In2.Cu", "In1.Cu", "F.Cu"]
-        for layer_name in layer_order:
+        render_order = ["B.Cu", "In4.Cu", "In3.Cu", "In2.Cu", "In1.Cu", "F.Cu"]
+        for layer_name in render_order:
             if layer_name in layers and layer_name in self.visible_layers:
                 layer_group = SubElement(main_group, "g")
                 layer_group.set("class", f"layer-{layer_name.replace('.', '-')}")
@@ -205,14 +205,19 @@ class PCBVisualizer:
                 circle.set("stroke-width", "0.1")
 
         # Add legend (show all layers with visibility indicators)
-        self._add_legend(svg, layers.keys())
+        self._add_legend(svg, list(layers.keys()), layer_order)
 
         # Convert to string with pretty formatting
         rough_string = tostring(svg, "unicode")
         reparsed = minidom.parseString(rough_string)
         return reparsed.toprettyxml(indent="  ")
 
-    def _add_legend(self, svg: Element, used_layers: List[str]) -> None:
+    def _add_legend(
+        self,
+        svg: Element,
+        used_layers: List[str],
+        layer_order: Optional[List[str]] = None,
+    ) -> None:
         """Add a legend showing layer colors."""
         if not used_layers:
             return
@@ -243,8 +248,20 @@ class PCBVisualizer:
         title.set("font-weight", "bold")
         title.text = "Layers"
 
+        # Sort layers by their index order instead of alphabetically
+        if layer_order is not None:
+            # Use the provided layer order from the PCB stackup
+            layer_order_mapping = {layer: idx for idx, layer in enumerate(layer_order)}
+            # Sort layers by index order, fallback to alphabetical for unknown layers
+            sorted_layers = sorted(
+                used_layers, key=lambda layer: layer_order_mapping.get(layer, 999)
+            )
+        else:
+            # Fallback to alphabetical sorting if no layer order provided
+            sorted_layers = sorted(used_layers)
+
         # Layer entries with visibility indicators
-        for i, layer in enumerate(sorted(used_layers)):
+        for i, layer in enumerate(sorted_layers):
             y_pos = legend_y + 25 + i * 20
             is_visible = layer in self.visible_layers
 

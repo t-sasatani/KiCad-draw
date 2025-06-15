@@ -561,7 +561,9 @@ class PCBdraw:
         """
         if not self.visualizer:
             return ""
-        return self.visualizer.generate_svg()
+        # Pass the layer order from this PCB's stackup to the visualizer
+        layer_order = self.layer_manager.layers
+        return self.visualizer.generate_svg(layer_order)
 
     def show_svg(self) -> None:
         """Display SVG in Jupyter notebook or print SVG string."""
