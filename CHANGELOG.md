@@ -5,6 +5,24 @@ All notable changes to KiCad-draw will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2024-12-20
+
+### Added
+- Automated PyPI publishing workflow using GitHub Actions
+- Trusted Publisher (OIDC) integration for secure, credential-free PyPI publishing
+- Automated GitHub Releases creation with changelog information
+- Multi-Python version testing (3.9-3.12) in CI pipeline
+
+### Changed
+- Modernized release process - publishing now triggered by git tag pushes
+- Enhanced security by eliminating need for API token management
+- Streamlined development workflow with automated testing and publishing
+
+### Infrastructure
+- Added comprehensive GitHub Actions workflow for automated releases
+- Integrated with PyPI Trusted Publishers for secure publishing
+- Automated package building and distribution process
+
 ## [0.4.0] - 2024-12-20
 
 ### Added
@@ -97,12 +115,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Key Features | Breaking Changes |
 |---------|-------------|------------------|
+| 0.4.1 | Automated publishing, GitHub Actions, trusted publishers | None |
 | 0.4.0 | Tab alignment fix, via spacing consistency, comprehensive docs | None |
 | 0.3.0 | Rectangular coils, enhanced visualization | Parameter object API |
 | 0.2.0 | SVG visualization, multi-layer support | Visualization API |
 | 0.1.0 | Basic circular coils, KiCad export | Initial release |
 
 ## Migration Guide
+
+### From 0.4.0 to 0.4.1
+- No breaking changes - pure infrastructure improvements
+- No code changes required - same API
+- Automated publishing now available for maintainers
 
 ### From 0.3.x to 0.4.0
 - No breaking changes - all existing code continues to work
