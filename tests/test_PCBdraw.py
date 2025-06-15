@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 from kicad_draw.PCBmodule import PCBdraw
 
 
