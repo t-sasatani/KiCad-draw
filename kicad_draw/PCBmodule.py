@@ -248,9 +248,10 @@ class PCBdraw:
             ),  # top-left
         ]
 
-        for turn, layer_index in enumerate(params.layer_index_list):
-            # Calculate port positions if ports are enabled
-            if params.port_gap > 0:
+        # Pre-calculate all port positions to ensure proper alignment between layers
+        port_positions = []
+        if params.port_gap > 0:
+            for turn in range(len(params.layer_index_list)):
                 # Calculate port offset for this layer (stagger ports between layers)
                 port_offset = (params.port_gap + Geometry.PORT_SPACING_UNIT) * turn - (
                     params.port_gap + Geometry.PORT_SPACING_UNIT
@@ -278,6 +279,12 @@ class PCBdraw:
                     + params.corner_radius,
                 )
 
+                port_positions.append((port_top_y, port_bottom_y))
+
+        for turn, layer_index in enumerate(params.layer_index_list):
+            # Get port positions for this layer
+            if params.port_gap > 0:
+                port_top_y, port_bottom_y = port_positions[turn]
                 # Tab positions (extending horizontally outward from ports)
                 tab_x = params.x0 + params.width / Math.HALF_DIVISOR + params.tab_gap
 
@@ -409,13 +416,15 @@ class PCBdraw:
 
             # Draw connection tabs and vias if ports are enabled
             if params.port_gap > 0:
-                # Draw horizontal connection tabs (like in draw_helix method)
+                # Draw horizontal connection tabs ensuring proper alignment between layers
                 if turn != 0:  # Bottom tab (connects from previous layer)
+                    # Use the top port position of the previous layer for alignment
+                    prev_port_top_y, _ = port_positions[turn - 1]
                     self.drawline(
                         x1=params.x0 + params.width / Math.HALF_DIVISOR,
-                        y1=port_bottom_y,
+                        y1=prev_port_top_y,  # Connect to previous layer's top port
                         x2=tab_x,
-                        y2=port_bottom_y,  # Horizontal tab
+                        y2=prev_port_top_y,  # Horizontal tab at same Y position
                         line_width=params.connect_width,
                         layer_index=layer_index,
                         net_number=params.net_number,
