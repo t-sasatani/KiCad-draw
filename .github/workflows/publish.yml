@@ -47,7 +47,7 @@ jobs:
       uses: astral-sh/setup-uv@v3
     
     - name: Install build dependencies
-      run: uv sync
+      run: uv sync --dev
     
     - name: Build package
       run: uv run python -m build
