@@ -5,36 +5,12 @@ from typing import List, Literal, Optional
 import numpy as np
 
 from kicad_draw.config import default_layers
+from kicad_draw.constants import Angle, Defaults, Geometry, Math, RectangleIndex
 from kicad_draw.formatter import KiCadFormatter
 from kicad_draw.geometry import Arc, Line, Point, Via
 from kicad_draw.layers import LayerManager
 from kicad_draw.models import HelixParams, HelixRectangleParams
 from kicad_draw.visualizer import PCBVisualizer
-
-# Constants for geometric calculations
-HALF_DIVISOR = 2
-DOUBLE_MULTIPLIER = 2
-PORT_SPACING_UNIT = 1.0
-RECTANGLE_SIDES_COUNT = 4
-
-# Rectangle side indices
-BOTTOM_SIDE_INDEX = 0
-RIGHT_SIDE_INDEX = 1
-TOP_SIDE_INDEX = 2
-LEFT_SIDE_INDEX = 3
-
-# Corner indices (same as side indices)
-BOTTOM_LEFT_CORNER = 0
-BOTTOM_RIGHT_CORNER = 1
-TOP_RIGHT_CORNER = 2
-TOP_LEFT_CORNER = 3
-
-# Angle constants
-ANGLE_PI = np.pi
-ANGLE_HALF_PI = np.pi / 2
-ANGLE_THREE_HALF_PI = 3 * np.pi / 2
-ANGLE_TWO_PI = 2 * np.pi
-ANGLE_ZERO = 0
 
 
 class PCBdraw:
@@ -107,8 +83,8 @@ class PCBdraw:
         layer_index: int,
         net_number: int,
         line_width: float,
-        angle_offset: float = 0,
-        segment_number: int = 100,
+        angle_offset: float = Angle.ZERO,
+        segment_number: int = Defaults.SEGMENT_COUNT,
     ) -> None:
         """Draw arc-shaped conductive trace."""
         center = Point(x0, y0)
@@ -158,95 +134,19 @@ class PCBdraw:
         if self.visualizer:
             self.visualizer.add_via(x, y, via_size)
 
-    def draw_helix(
-        self,
-        params: HelixParams = None,
-        # Legacy parameters for backward compatibility
-        x0: float = None,
-        y0: float = None,
-        radius: float = None,
-        port_gap: float = None,
-        tab_gap: float = None,
-        angle_step: float = None,
-        layer_index_list: List[int] = None,
-        track_width: float = None,
-        connect_width: float = None,
-        drill_size: float = None,
-        via_size: float = None,
-        net_number: int = None,
-        tab_position: Literal["IN", "OUT"] = "OUT",
-        base_angle_offset: float = 0,
-        segment_number: int = 100,
-    ) -> None:
+    def draw_helix(self, params: HelixParams) -> None:
         """Draw helix coil pattern.
 
         Args:
-            params: HelixParams object containing all parameters (preferred method)
-
-            # Legacy parameters (for backward compatibility):
-            x0: X-coordinate of the helix center (mm)
-            y0: Y-coordinate of the helix center (mm)
-            radius: Radius of the circular helix (mm)
-            port_gap: Gap size for ports (mm)
-            tab_gap: Extension distance for connection tabs (mm)
-            angle_step: Angular step between layers (radians)
-            layer_index_list: List of layer indices for the helix
-            track_width: Width of the main coil traces (mm)
-            connect_width: Width of the connection traces between layers (mm)
-            drill_size: Diameter of via drill holes (mm)
-            via_size: Outer diameter of vias (mm)
-            net_number: KiCad net number for electrical connectivity
-            tab_position: Position of connection tabs ("IN" or "OUT")
-            base_angle_offset: Base angular offset for the entire helix (radians)
-            segment_number: Number of segments for curved sections
+            params: HelixParams object containing all parameters
 
         """
-        # Handle both new params-based interface and legacy individual parameters
-        if params is not None:
-            # Use the new HelixParams object
-            p = params
-        else:
-            # Create HelixParams from legacy parameters for backward compatibility
-            if any(
-                param is None
-                for param in [
-                    x0,
-                    y0,
-                    radius,
-                    port_gap,
-                    tab_gap,
-                    angle_step,
-                    layer_index_list,
-                    track_width,
-                    connect_width,
-                    drill_size,
-                    via_size,
-                    net_number,
-                ]
-            ):
-                raise ValueError(
-                    "When not using params object, all legacy parameters must be provided"
-                )
-
-            p = HelixParams(
-                x0=x0,
-                y0=y0,
-                radius=radius,
-                port_gap=port_gap,
-                tab_gap=tab_gap,
-                angle_step=angle_step,
-                layer_index_list=layer_index_list,
-                track_width=track_width,
-                connect_width=connect_width,
-                drill_size=drill_size,
-                via_size=via_size,
-                net_number=net_number,
-                tab_position=tab_position,
-                base_angle_offset=base_angle_offset,
-                segment_number=segment_number,
-            )
+        p = params
         # angle of the port openings
-        port_angle = np.arcsin(p.port_gap / HALF_DIVISOR / p.radius) * DOUBLE_MULTIPLIER
+        port_angle = (
+            np.arcsin(p.port_gap / Math.HALF_DIVISOR / p.radius)
+            * Math.DOUBLE_MULTIPLIER
+        )
 
         # draw coil patterns
         for turn in range(len(p.layer_index_list)):
@@ -255,7 +155,7 @@ class PCBdraw:
                 + p.base_angle_offset
                 - (port_angle + p.angle_step)
                 * (len(p.layer_index_list) - 1)
-                / HALF_DIVISOR
+                / Math.HALF_DIVISOR
             )
             self.draw_polyline_arc(
                 x0=p.x0,
@@ -269,25 +169,25 @@ class PCBdraw:
                 segment_number=p.segment_number,
             )
 
-            port_angle_top = turn_angle_offset + port_angle / HALF_DIVISOR
-            port_angle_bottom = turn_angle_offset - port_angle / HALF_DIVISOR
+            port_angle_top = turn_angle_offset + port_angle / Math.HALF_DIVISOR
+            port_angle_bottom = turn_angle_offset - port_angle / Math.HALF_DIVISOR
 
             x1_top = p.x0 + p.radius * np.cos(port_angle_top)
             y1_top = p.y0 + p.radius * np.sin(port_angle_top)
             x2_top = p.x0 + (p.radius + p.tab_gap) * np.cos(
-                port_angle_top + p.angle_step / HALF_DIVISOR
+                port_angle_top + p.angle_step / Math.HALF_DIVISOR
             )
             y2_top = p.y0 + (p.radius + p.tab_gap) * np.sin(
-                port_angle_top + p.angle_step / HALF_DIVISOR
+                port_angle_top + p.angle_step / Math.HALF_DIVISOR
             )
 
             x1_bottom = p.x0 + p.radius * np.cos(port_angle_bottom)
             y1_bottom = p.y0 + p.radius * np.sin(port_angle_bottom)
             x2_bottom = p.x0 + (p.radius + p.tab_gap) * np.cos(
-                port_angle_bottom - p.angle_step / HALF_DIVISOR
+                port_angle_bottom - p.angle_step / Math.HALF_DIVISOR
             )
             y2_bottom = p.y0 + (p.radius + p.tab_gap) * np.sin(
-                port_angle_bottom - p.angle_step / HALF_DIVISOR
+                port_angle_bottom - p.angle_step / Math.HALF_DIVISOR
             )
 
             if turn != 0:
@@ -331,20 +231,20 @@ class PCBdraw:
         """
         corners = [
             Point(
-                params.x0 - params.width / HALF_DIVISOR,
-                params.y0 - params.height / HALF_DIVISOR,
+                params.x0 - params.width / Math.HALF_DIVISOR,
+                params.y0 - params.height / Math.HALF_DIVISOR,
             ),  # bottom-left
             Point(
-                params.x0 + params.width / HALF_DIVISOR,
-                params.y0 - params.height / HALF_DIVISOR,
+                params.x0 + params.width / Math.HALF_DIVISOR,
+                params.y0 - params.height / Math.HALF_DIVISOR,
             ),  # bottom-right
             Point(
-                params.x0 + params.width / HALF_DIVISOR,
-                params.y0 + params.height / HALF_DIVISOR,
+                params.x0 + params.width / Math.HALF_DIVISOR,
+                params.y0 + params.height / Math.HALF_DIVISOR,
             ),  # top-right
             Point(
-                params.x0 - params.width / HALF_DIVISOR,
-                params.y0 + params.height / HALF_DIVISOR,
+                params.x0 - params.width / Math.HALF_DIVISOR,
+                params.y0 + params.height / Math.HALF_DIVISOR,
             ),  # top-left
         ]
 
@@ -352,33 +252,41 @@ class PCBdraw:
             # Calculate port positions if ports are enabled
             if params.port_gap > 0:
                 # Calculate port offset for this layer (stagger ports between layers)
-                port_offset = (params.port_gap + PORT_SPACING_UNIT) * turn - (
-                    params.port_gap + PORT_SPACING_UNIT
-                ) * (len(params.layer_index_list) - 1) / HALF_DIVISOR
+                port_offset = (params.port_gap + Geometry.PORT_SPACING_UNIT) * turn - (
+                    params.port_gap + Geometry.PORT_SPACING_UNIT
+                ) * (len(params.layer_index_list) - 1) / Math.HALF_DIVISOR
 
                 # Port positions on the right side
-                port_top_y = params.y0 + port_offset + params.port_gap / HALF_DIVISOR
-                port_bottom_y = params.y0 + port_offset - params.port_gap / HALF_DIVISOR
+                port_top_y = (
+                    params.y0 + port_offset + params.port_gap / Math.HALF_DIVISOR
+                )
+                port_bottom_y = (
+                    params.y0 + port_offset - params.port_gap / Math.HALF_DIVISOR
+                )
 
                 # Clamp ports to be within the rectangle bounds
                 port_top_y = min(
                     port_top_y,
-                    params.y0 + params.height / HALF_DIVISOR - params.corner_radius,
+                    params.y0
+                    + params.height / Math.HALF_DIVISOR
+                    - params.corner_radius,
                 )
                 port_bottom_y = max(
                     port_bottom_y,
-                    params.y0 - params.height / HALF_DIVISOR + params.corner_radius,
+                    params.y0
+                    - params.height / Math.HALF_DIVISOR
+                    + params.corner_radius,
                 )
 
                 # Tab positions (extending horizontally outward from ports)
-                tab_x = params.x0 + params.width / HALF_DIVISOR + params.tab_gap
+                tab_x = params.x0 + params.width / Math.HALF_DIVISOR + params.tab_gap
 
             # Draw the four sides of the rectangle (shortened to connect with arcs)
-            for i in range(RECTANGLE_SIDES_COUNT):
+            for i in range(Geometry.RECTANGLE_SIDES_COUNT):
                 start = corners[i]
-                end = corners[(i + 1) % RECTANGLE_SIDES_COUNT]
+                end = corners[(i + 1) % Geometry.RECTANGLE_SIDES_COUNT]
 
-                if i == BOTTOM_SIDE_INDEX:  # Bottom side
+                if i == RectangleIndex.BOTTOM_SIDE:  # Bottom side
                     # Shorten by corner radius on both ends
                     start_x = start.x + params.corner_radius
                     end_x = end.x - params.corner_radius
@@ -391,7 +299,7 @@ class PCBdraw:
                         layer_index=layer_index,
                         net_number=params.net_number,
                     )
-                elif i == RIGHT_SIDE_INDEX:  # Right side
+                elif i == RectangleIndex.RIGHT_SIDE:  # Right side
                     if params.port_gap > 0:
                         # Draw bottom part of right side (from bottom-right corner to bottom port)
                         if port_bottom_y > start.y + params.corner_radius:
@@ -427,7 +335,7 @@ class PCBdraw:
                             layer_index=layer_index,
                             net_number=params.net_number,
                         )
-                elif i == TOP_SIDE_INDEX:  # Top side
+                elif i == RectangleIndex.TOP_SIDE:  # Top side
                     # Shorten by corner radius on both ends
                     start_x = start.x - params.corner_radius
                     end_x = end.x + params.corner_radius
@@ -440,7 +348,7 @@ class PCBdraw:
                         layer_index=layer_index,
                         net_number=params.net_number,
                     )
-                elif i == LEFT_SIDE_INDEX:  # Left side
+                elif i == RectangleIndex.LEFT_SIDE:  # Left side
                     # Shorten by corner radius on both ends
                     self.drawline(
                         x1=start.x,
@@ -453,32 +361,32 @@ class PCBdraw:
                     )
 
             # Draw rounded corners
-            for i in range(RECTANGLE_SIDES_COUNT):
+            for i in range(Geometry.RECTANGLE_SIDES_COUNT):
                 corner = corners[i]
-                if i == BOTTOM_LEFT_CORNER:  # bottom-left
+                if i == RectangleIndex.BOTTOM_LEFT_CORNER:  # bottom-left
                     center = Point(
                         corner.x + params.corner_radius, corner.y + params.corner_radius
                     )
-                    start_angle = ANGLE_PI
-                    end_angle = ANGLE_THREE_HALF_PI
-                elif i == BOTTOM_RIGHT_CORNER:  # bottom-right
+                    start_angle = Angle.PI
+                    end_angle = Angle.THREE_HALF_PI
+                elif i == RectangleIndex.BOTTOM_RIGHT_CORNER:  # bottom-right
                     center = Point(
                         corner.x - params.corner_radius, corner.y + params.corner_radius
                     )
-                    start_angle = ANGLE_THREE_HALF_PI
-                    end_angle = ANGLE_TWO_PI
-                elif i == TOP_RIGHT_CORNER:  # top-right
+                    start_angle = Angle.THREE_HALF_PI
+                    end_angle = Angle.TWO_PI
+                elif i == RectangleIndex.TOP_RIGHT_CORNER:  # top-right
                     center = Point(
                         corner.x - params.corner_radius, corner.y - params.corner_radius
                     )
-                    start_angle = ANGLE_ZERO
-                    end_angle = ANGLE_HALF_PI
-                else:  # top-left (TOP_LEFT_CORNER)
+                    start_angle = Angle.ZERO
+                    end_angle = Angle.HALF_PI
+                else:  # top-left (RectangleIndex.TOP_LEFT_CORNER)
                     center = Point(
                         corner.x + params.corner_radius, corner.y - params.corner_radius
                     )
-                    start_angle = ANGLE_HALF_PI
-                    end_angle = ANGLE_PI
+                    start_angle = Angle.HALF_PI
+                    end_angle = Angle.PI
 
                 arc = Arc(
                     center=center,
@@ -504,7 +412,7 @@ class PCBdraw:
                 # Draw horizontal connection tabs (like in draw_helix method)
                 if turn != 0:  # Bottom tab (connects from previous layer)
                     self.drawline(
-                        x1=params.x0 + params.width / HALF_DIVISOR,
+                        x1=params.x0 + params.width / Math.HALF_DIVISOR,
                         y1=port_bottom_y,
                         x2=tab_x,
                         y2=port_bottom_y,  # Horizontal tab
@@ -517,7 +425,7 @@ class PCBdraw:
                     turn != len(params.layer_index_list) - 1
                 ):  # Top tab (connects to next layer)
                     self.drawline(
-                        x1=params.x0 + params.width / HALF_DIVISOR,
+                        x1=params.x0 + params.width / Math.HALF_DIVISOR,
                         y1=port_top_y,
                         x2=tab_x,
                         y2=port_top_y,  # Horizontal tab
@@ -544,8 +452,8 @@ class PCBdraw:
                         params.layer_index_list.index(layer_index) + 1
                     ]
                     self.draw_via(
-                        x=corners[TOP_RIGHT_CORNER].x,
-                        y=corners[TOP_RIGHT_CORNER].y,
+                        x=corners[RectangleIndex.TOP_RIGHT_CORNER].x,
+                        y=corners[RectangleIndex.TOP_RIGHT_CORNER].y,
                         via_size=params.via_size,
                         drill_size=params.drill_size,
                         net_number=params.net_number,
@@ -612,7 +520,11 @@ class PCBdraw:
 
         print(f"PCB elements saved to {output_path}")
 
-    def enable_visualization(self, width: float = 800, height: float = 600) -> None:
+    def enable_visualization(
+        self,
+        width: float = Defaults.CANVAS_WIDTH,
+        height: float = Defaults.CANVAS_HEIGHT,
+    ) -> None:
         """Enable SVG visualization.
 
         Args:
@@ -846,8 +758,8 @@ class PCBdraw:
         self,
         visible_layers: Optional[List[int]] = None,
         show_vias: bool = True,
-        width: float = 800,
-        height: float = 600,
+        width: float = Defaults.CANVAS_WIDTH,
+        height: float = Defaults.CANVAS_HEIGHT,
     ) -> str:
         """Create SVG visualization of the PCB.
 
@@ -895,30 +807,3 @@ class PCBdraw:
 
         self.set_via_visibility(show_vias)
         return self.get_svg()
-
-    """
-    def drawspiral_2layer(self, x0, y0, rstart, rend, Nturns, Portgap, Nelement, layer_index1, layer_index2, TrackWidth, Connectwidth, net_number):
-        r_inc = (rend - rstart)/(Nturns-1)
-        for i in range(Nturns):
-            self.draw_polyline_arc(x0, y0, rstart + r_inc * i, Portgap, Nelement, self.layers[layer_index1], TrackWidth, net_number)
-            if i < Nturns -1:
-                port_angle1 = np.arcsin((Portgap/2)/(rstart + r_inc * i))
-                port_angle2 = np.arcsin((Portgap/2)/(rstart + r_inc * (i+1)))
-
-                x1 = x0 + (rstart + r_inc * i) * np.cos(port_angle1)
-                x2 = x0 + (rstart + r_inc * (i+1)) * np.cos(port_angle2)
-                y1 = y0 + (rstart + r_inc * i) * np.sin(port_angle1)
-                y2 = y0 - ((rstart + r_inc * (i+1)) * np.sin(port_angle2))
-                self.drawline (x1, y1, x2, y2, Connectwidth, self.layers[layer_index1], net_number)
-        for i in range(Nturns):
-            self.draw_polyline_arc(x0, y0, rstart + r_inc * i, Portgap, Nelement, self.layers[layer_index2], TrackWidth, net_number)
-            if i < Nturns -1:
-                port_angle1 = np.arcsin((Portgap/2)/(rstart + r_inc * i))
-                port_angle2 = np.arcsin((Portgap/2)/(rstart + r_inc * (i+1)))
-
-                x1 = x0 + (rstart + r_inc * i) * np.cos(port_angle1)
-                x2 = x0 + (rstart + r_inc * (i+1)) * np.cos(port_angle2)
-                y1 = y0 - (rstart + r_inc * i) * np.sin(port_angle1)
-                y2 = y0 + ((rstart + r_inc * (i+1)) * np.sin(port_angle2))
-                self.drawline (x1, y1, x2, y2, Connectwidth, self.layers[layer_index2], net_number)
-    """

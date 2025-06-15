@@ -5,6 +5,8 @@ from typing import List, Tuple
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+from .constants import Defaults
+
 
 class PCBVisualizer:
     """SVG-based visualizer for PCB patterns."""
@@ -22,7 +24,11 @@ class PCBVisualizer:
     VIA_COLOR = "#404040"  # Dark gray for vias
     BACKGROUND_COLOR = "#1a1a1a"  # Dark PCB substrate
 
-    def __init__(self, width: float = 800, height: float = 600):
+    def __init__(
+        self,
+        width: float = Defaults.CANVAS_WIDTH,
+        height: float = Defaults.CANVAS_HEIGHT,
+    ):
         """Initialize SVG visualizer.
 
         Args:
@@ -72,7 +78,7 @@ class PCBVisualizer:
         end_angle: float,
         width: float,
         layer: str,
-        segments: int = 32,
+        segments: int = Defaults.ARC_SEGMENTS,
     ) -> None:
         """Add an arc by converting to line segments."""
         angle_step = (end_angle - start_angle) / segments
@@ -103,7 +109,7 @@ class PCBVisualizer:
         if not self.bounds:
             return 1.0, 0.0, 0.0
 
-        margin = 50  # pixels
+        margin = Defaults.LEGEND_MARGIN  # pixels
         content_width = self.bounds[2] - self.bounds[0]
         content_height = self.bounds[3] - self.bounds[1]
 
@@ -214,8 +220,8 @@ class PCBVisualizer:
         legend_group = SubElement(svg, "g")
         legend_group.set("class", "legend")
 
-        legend_x = 20
-        legend_y = 30
+        legend_x = Defaults.LEGEND_X
+        legend_y = Defaults.LEGEND_Y
 
         # Legend background (wider to accommodate visibility indicators)
         legend_bg = SubElement(legend_group, "rect")
