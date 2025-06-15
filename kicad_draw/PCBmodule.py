@@ -45,6 +45,7 @@ class PCBdraw:
         stackup: Literal[tuple(default_layers)],
         mode: Literal["print", "file"] = "print",
         visualizer: Optional[PCBVisualizer] = None,
+        enable_visualization: bool = True,
     ):
         """Initialize PCBdraw with stackup.
 
@@ -52,6 +53,7 @@ class PCBdraw:
             stackup: The PCB stackup configuration
             mode: Operation mode - "print" for direct s-expression output, "file" for collecting elements
             visualizer: Optional PCBVisualizer instance for SVG output
+            enable_visualization: Whether to enable visualization by default (True recommended)
 
         """
         self.layer_manager = LayerManager(stackup)
@@ -59,6 +61,11 @@ class PCBdraw:
         self.mode = mode
         self.elements = []  # Buffer to collect s-expressions when in file mode
         self.visualizer = visualizer
+        
+        # Enable visualization by default for better user experience
+        if enable_visualization and not self.visualizer:
+            from .visualizer import PCBVisualizer
+            self.visualizer = PCBVisualizer()
 
     def _output(self, s_expr: str) -> None:
         """Output s-expression based on current mode."""
@@ -541,7 +548,12 @@ class PCBdraw:
             width: SVG canvas width in pixels
             height: SVG canvas height in pixels
         """
+        from .visualizer import PCBVisualizer
         self.visualizer = PCBVisualizer(width, height)
+        
+    def disable_visualization(self) -> None:
+        """Disable SVG visualization to save memory."""
+        self.visualizer = None
 
     def save_svg(self, filename: str) -> None:
         """Save current visualization as SVG file.
@@ -709,8 +721,13 @@ class PCBdraw:
         Returns:
             SVG string
         """
+        # If no visualizer exists (rare case when explicitly disabled)
         if not self.visualizer:
-            self.enable_visualization(width, height)
+            print("Warning: Visualization was disabled. No PCB elements to display.")
+            print("To enable visualization:")
+            print("  pcb = PCBdraw(stackup='default_6layer', mode='file', enable_visualization=True)")
+            print("  # or call pcb.enable_visualization() before drawing")
+            return ""
             
         # Apply layer visibility settings
         if visible_layers is not None:
