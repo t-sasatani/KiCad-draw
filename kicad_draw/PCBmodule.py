@@ -252,10 +252,9 @@ class PCBdraw:
         port_positions = []
         if params.port_gap > 0:
             for turn in range(len(params.layer_index_list)):
-                # Calculate port offset for this layer (stagger ports between layers)
-                port_offset = (params.port_gap + Geometry.PORT_SPACING_UNIT) * turn - (
-                    params.port_gap + Geometry.PORT_SPACING_UNIT
-                ) * (len(params.layer_index_list) - 1) / Math.HALF_DIVISOR
+                # Calculate port offset for this layer using the same approach as circular helix
+                # Use port_gap directly for consistent spacing, similar to circular helix
+                port_offset = params.port_gap * turn - params.port_gap * (len(params.layer_index_list) - 1) / Math.HALF_DIVISOR
 
                 # Port positions on the right side
                 port_top_y = (
