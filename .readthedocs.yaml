@@ -14,12 +14,16 @@ sphinx:
 #    - pdf
 
 # Optionally declare the Python requirements required to build your docs
+python:
+  install:
+    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+
 build:
   os: ubuntu-22.04
   tools:
     python: "3.10"
   jobs:
-    post_create_environment:
-      - pip install sphinx sphinx_rtd_theme myst-parser
     post_install:
-      - pip install -e .
+      - python docs/generate_examples.py
