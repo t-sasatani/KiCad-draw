@@ -5,6 +5,31 @@ All notable changes to KiCad-draw will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.2] - 2025-06-15
+
+### Changed
+- **Python requirement**: Now requires Python >=3.11,<4.0 (dropped Python 3.10 support)
+- **Major dependency updates**: Updated to latest stable versions for improved performance and security
+  - NumPy: 1.26.4 → 2.3.0 (major version upgrade with significant performance improvements)
+  - pytest-cov: 4.1.0 → 6.2.1 (enhanced coverage reporting and analysis)
+  - pydantic-core: 2.33.2 → 2.35.1 (latest security patches and bug fixes)
+
+### Fixed
+- **GitHub Actions**: Resolved HTTP 403/422 errors in release creation workflow
+- **CI/CD pipeline**: Fixed tag extraction using `GITHUB_REF_NAME` for reliable release automation
+- **Badge display**: Corrected Python version badge in README (now properly shows supported versions)
+- **Workflow permissions**: Added required `contents: write` permission for GitHub release creation
+
+### Infrastructure
+- **Simplified CI/CD**: Removed complex retry logic, streamlined workflow for better reliability
+- **Updated GitHub Actions**: Latest stable versions (checkout@v4, setup-python@v5, setup-uv@v4)
+- **Test matrix**: Updated to Python 3.11, 3.12, 3.13 (aligned with new requirements)
+- **Performance**: Faster CI execution with optimized dependency installation
+
+### Performance
+- **NumPy 2.3.0**: Significant mathematical operation performance improvements
+- **Modern dependencies**: All packages updated to latest stable versions with performance optimizations
+
 ## [0.5.1] - 2025-06-15
 
 ### Fixed
@@ -162,6 +187,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Key Features | Breaking Changes |
 |---------|-------------|------------------|
+| 0.5.2 | Dependency updates, CI/CD improvements, Python 3.11+ requirement | Python 3.10 support dropped |
 | 0.5.1 | PyPI publishing fix, clean version generation | None |
 | 0.5.0 | Repository cleanup, build pipeline fixes | None |
 | 0.4.2 | GitHub Pages docs, build fixes, streamlined maintenance | None |
@@ -172,6 +198,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | 0.1.0 | Basic circular coils, KiCad export | Initial release |
 
 ## Migration Guide
+
+### From 0.5.1 to 0.5.2
+- **Python requirement change**: Ensure you're using Python 3.11 or higher
+- **No API changes**: All existing code continues to work unchanged
+- **Dependency benefits**: Automatic performance improvements from NumPy 2.3.0
+- **Testing improvements**: Better coverage reporting with pytest-cov 6.2.1
 
 ### From 0.5.0 to 0.5.1
 - No breaking changes - pure infrastructure fix for PyPI publishing
