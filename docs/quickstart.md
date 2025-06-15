@@ -59,37 +59,12 @@ with open("my_coil.svg", "w") as f:
     f.write(svg)
 ```
 
-## What You Get
 
-- **KiCad-compatible s-expressions** that you can directly paste into your PCB file
-- **SVG visualization** for immediate preview and documentation
-- **Proper via connections** between layers
-- **Consistent spacing** and alignment
+## Common Parameters
+TBD
 
-## Next Steps
+## Tips
 
-- Explore the [Examples](examples.md) page for more complex designs
-- Check the [API Reference](api.rst) for all available parameters
-- Learn about rectangular coils in the examples for space-constrained designs
-
-## Common Parameters Explained
-
-| Parameter | Description | Typical Values |
-|-----------|-------------|----------------|
-| `radius` | Coil radius for circular designs | 5-20 mm |
-| `width/height` | Rectangle dimensions | 10-50 mm |
-| `track_width` | Main trace width | 0.1-1.0 mm |
-| `port_gap` | Opening between coil turns | 0.2-2.0 mm |
-| `layer_index_list` | Which PCB layers to use | [0,1] to [0,1,2,3,4,5] |
-| `via_size` | Via outer diameter | 0.4-0.8 mm |
-
-## Tips for Success
-
-1. **Start simple**: Begin with 2-layer designs before adding more layers
-2. **Check constraints**: Ensure via sizes match your PCB manufacturer's capabilities  
-3. **Visualize first**: Always check the SVG before importing to KiCad
-4. **Test in KiCad**: Run DRC after importing to catch any issues
-
----
-
-Ready to create more complex designs? Head to the [Examples](examples.md) page to see advanced multi-layer coils with full visualizations! 
+1. **Check constraints**: Ensure via sizes match your PCB manufacturer's capabilities  
+1. **Visualize first**: Always check the SVG before importing to KiCad
+1. **Test in KiCad**: Run DRC after importing to catch any issues
