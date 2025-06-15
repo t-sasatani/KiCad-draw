@@ -673,6 +673,57 @@ class PCBdraw:
         if not self.visualizer:
             return []
         return self.visualizer.get_visible_layers()
+        
+    def set_via_visibility(self, visible: bool) -> None:
+        """Control via visibility in visualization.
+        
+        Args:
+            visible: True to show vias, False to hide them
+        """
+        if not self.visualizer:
+            print("Visualization not enabled. Call enable_visualization() first.")
+            return
+        self.visualizer.set_via_visibility(visible)
+        
+    def export(self) -> str:
+        """Export PCB elements as KiCad s-expressions string.
+        
+        Returns:
+            String containing all KiCad s-expressions
+        """
+        if self.mode != "file":
+            print("Warning: Not in file mode. Use set_mode('file') first.")
+            return ""
+        return "\n".join(self.elements)
+        
+    def visualize(self, visible_layers: Optional[List[int]] = None, show_vias: bool = True, 
+                  width: float = 800, height: float = 600) -> str:
+        """Create SVG visualization of the PCB.
+        
+        Args:
+            visible_layers: List of layer indices to show (0=F.Cu, 1=In1.Cu, etc.). If None, show all.
+            show_vias: Whether to show vias
+            width: SVG canvas width in pixels
+            height: SVG canvas height in pixels
+            
+        Returns:
+            SVG string
+        """
+        if not self.visualizer:
+            self.enable_visualization(width, height)
+            
+        # Apply layer visibility settings
+        if visible_layers is not None:
+            layer_names = ["F.Cu", "In1.Cu", "In2.Cu", "In3.Cu", "In4.Cu", "B.Cu"]
+            self.hide_all_layers()
+            for layer_idx in visible_layers:
+                if layer_idx < len(layer_names):
+                    self.show_layer(layer_names[layer_idx])
+        else:
+            self.show_all_layers()
+            
+        self.set_via_visibility(show_vias)
+        return self.get_svg()
 
     """
     def drawspiral_2layer(self, x0, y0, rstart, rend, Nturns, Portgap, Nelement, layer_index1, layer_index2, TrackWidth, Connectwidth, net_number):
