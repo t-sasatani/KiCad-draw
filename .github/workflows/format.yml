@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
-        run: pip install black[jupyter] isort
+        run: pip install black isort
       - name: Check Black formatting
         run: black --check .
       - name: Check isort formatting
