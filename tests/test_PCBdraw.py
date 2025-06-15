@@ -7,6 +7,7 @@ to ensure backward compatibility and core functionality.
 import os
 import sys
 
+from kicad_draw.models import HelixParams
 from kicad_draw.PCBmodule import PCBdraw
 
 
@@ -70,20 +71,25 @@ def test__can_draw_helix_coil(capsys):
     netnumber = 1  # find from KiCad PCB file
 
     kicad_draw = PCBdraw(stackup="default_6layer")
-    kicad_draw.draw_helix(
+
+    # Create HelixParams object for new API
+    params = HelixParams(
         x0=Center[0],
         y0=Center[1],
         radius=radius,
-        track_width=track_width,
-        connect_width=connect_width,
         port_gap=port_gap,
-        net_number=netnumber,
-        drill_size=drill_size,
-        via_size=via_size,
         tab_gap=tab_gap,
         angle_step=angle_step,
         layer_index_list=layerindexlist,
+        track_width=track_width,
+        connect_width=connect_width,
+        drill_size=drill_size,
+        via_size=via_size,
+        net_number=netnumber,
+        segment_number=100,  # Use default segment number
     )
+
+    kicad_draw.draw_helix(params)
 
     sys.stdout.close()
     sys.stdout = sys.__stdout__

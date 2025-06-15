@@ -13,7 +13,9 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   quickstart
    usage
+   examples
    api
    dev
 
