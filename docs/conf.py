@@ -47,7 +47,9 @@ html_static_path = ["_static"]
 
 # -- Furo theme options -----------------------------------------------------
 html_theme_options = {
-    "sidebar_hide_name": True,
+    "source_repository": "https://github.com/t-sasatani/KiCad-draw/",
+    "source_branch": "master",
+    "source_directory": "docs/",
     "light_css_variables": {
         "color-brand-primary": "#2980b9",
         "color-brand-content": "#2980b9",

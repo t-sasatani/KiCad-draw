@@ -8,8 +8,6 @@ KiCad-draw documentation
 
 A Python library for generating PCB coil patterns compatible with KiCad.
 
-**Latest Release:** v0.4.0 - Critical fixes for tab alignment and via spacing consistency, plus comprehensive documentation with SVG visualizations.
-
 Contents
 --------
 .. toctree::
