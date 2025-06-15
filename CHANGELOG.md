@@ -5,6 +5,23 @@ All notable changes to KiCad-draw will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2025-06-15
+
+### Fixed
+- GitHub Actions publishing workflow now includes required `build` package
+- Documentation deployment switched from Read the Docs to GitHub Pages
+- Duplicate changelog entries removed from documentation sidebar
+
+### Changed  
+- Documentation now hosted on GitHub Pages for better integration
+- Simplified README to minimize maintenance overhead
+- Improved development workflow with proper build dependencies
+
+### Infrastructure
+- Added `build` package to dev dependencies for reliable package building
+- Streamlined documentation build process with GitHub Actions
+- Eliminated Read the Docs configuration complexity
+
 ## [0.4.1] - 2025-06-15
 
 ### Added
@@ -115,6 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Key Features | Breaking Changes |
 |---------|-------------|------------------|
+| 0.4.2 | GitHub Pages docs, build fixes, streamlined maintenance | None |
 | 0.4.1 | Automated publishing, GitHub Actions, trusted publishers | None |
 | 0.4.0 | Tab alignment fix, via spacing consistency, comprehensive docs | None |
 | 0.3.0 | Rectangular coils, enhanced visualization | Parameter object API |
@@ -122,6 +140,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | 0.1.0 | Basic circular coils, KiCad export | Initial release |
 
 ## Migration Guide
+
+### From 0.4.1 to 0.4.2
+- No breaking changes - pure infrastructure improvements  
+- No code changes required - same API
+- Documentation now on GitHub Pages instead of Read the Docs
+- Development builds now more reliable with proper dependencies
 
 ### From 0.4.0 to 0.4.1
 - No breaking changes - pure infrastructure improvements
