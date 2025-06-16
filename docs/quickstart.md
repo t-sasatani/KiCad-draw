@@ -8,7 +8,7 @@ Get started with KiCad-draw in just a few minutes! This guide shows you how to c
 pip install kicad-draw
 ```
 
-## Your First Coil in 3 Steps
+## Generating a coil pattern
 
 ### Step 1: Import and Define Parameters
 

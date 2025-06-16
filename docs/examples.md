@@ -42,12 +42,18 @@ svg_content = pcb.visualize(visible_layers=[0, 1, 2, 3], show_vias=True)
 #### All Layers Visible
 This visualization shows all 4 layers of the circular helix with different colors for each layer:
 
-<img src="_static/images/circular_helix_all_layers.svg" alt="Circular Helix - All Layers" width="400"/>
+```{image} _static/images/circular_helix_all_layers.svg
+:alt: Circular Helix - All Layers
+:width: 400px
+```
 
 #### Outer Layers Only
 This shows only the front copper (F.Cu) and inner layer 3 (In3.Cu) to highlight the overall coil structure:
 
-<img src="_static/images/circular_helix_outer_layers.svg" alt="Circular Helix - Outer Layers" width="400"/>
+```{image} _static/images/circular_helix_outer_layers.svg
+:alt: Circular Helix - Outer Layers
+:width: 400px
+```
 
 **Key Features:**
 - **Consistent via spacing**: Vias are positioned with ~0.68mm spacing
@@ -94,12 +100,18 @@ svg_content = pcb.visualize(visible_layers=[0, 1, 2, 3], show_vias=True)
 #### All Layers Visible
 This visualization shows all 4 layers of the rectangular helix:
 
-<img src="_static/images/rectangular_helix_all_layers.svg" alt="Rectangular Helix - All Layers" width="400"/>
+```{image} _static/images/rectangular_helix_all_layers.svg
+:alt: Rectangular Helix - All Layers
+:width: 400px
+```
 
 #### Outer Layers Only
 This shows the front copper and inner layer 3 to highlight the rectangular structure:
 
-<img src="_static/images/rectangular_helix_outer_layers.svg" alt="Rectangular Helix - Outer Layers" width="400"/>
+```{image} _static/images/rectangular_helix_outer_layers.svg
+:alt: Rectangular Helix - Outer Layers
+:width: 400px
+```
 
 **Key Features:**
 - **Consistent via spacing**: Now matches circular helix with ~0.65mm spacing (after our fix!)
@@ -111,7 +123,10 @@ This shows the front copper and inner layer 3 to highlight the rectangular struc
 
 This example shows both circular and rectangular coils in the same design for direct comparison:
 
-<img src="_static/images/comparison_circular_vs_rectangular.svg" alt="Circular vs Rectangular Comparison" width="600"/>
+```{image} _static/images/comparison_circular_vs_rectangular.svg
+:alt: Circular vs Rectangular Comparison
+:width: 600px
+```
 
 **Comparison Highlights:**
 - **Size efficiency**: Rectangular coils can fit better in constrained spaces

@@ -6,7 +6,7 @@
 KiCad-draw documentation
 ======================================
 
-A Python library for generating PCB coil patterns compatible with KiCad.
+A Python library for generating KiCad PCB traces.
 
 Contents
 --------
