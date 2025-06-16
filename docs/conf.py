@@ -33,6 +33,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
+    "sphinx.ext.githubpages",
 ]
 
 # MyST parser configuration
@@ -67,3 +68,6 @@ html_theme_options = {
 }
 
 html_title = "KiCad-draw Documentation"
+
+# GitHub Pages configuration
+html_baseurl = "https://t-sasatani.github.io/KiCad-draw/"
