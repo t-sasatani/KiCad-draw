@@ -38,7 +38,6 @@ extensions = [
 # MyST parser configuration
 myst_enable_extensions = [
     "html_image",
-    "linkify",
     "substitution",
 ]
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
